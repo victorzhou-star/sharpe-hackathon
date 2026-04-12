@@ -60,6 +60,7 @@ The round-trip (English → executable → English) is required.
 
 Sample files live at the repo root; filenames match the table. Use them to develop and test.
 
+**Provenance.** These examples were sourced from [Law Insider](https://www.lawinsider.com), which has many other real contract texts worth browsing if you want more material to experiment with. For this repository they were converted to Markdown and cleaned up. Anything that was blacked out or omitted in the originals was replaced with **fake** placeholder text (names, amounts, addresses, and similar details are not real).
 
 | Contract                                                          | Type                  | Complexity                                       |
 | ----------------------------------------------------------------- | --------------------- | ------------------------------------------------ |
