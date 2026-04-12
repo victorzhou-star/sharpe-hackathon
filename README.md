@@ -1,4 +1,4 @@
-# Credit Card Agreement Simulation Engine
+# Credit Card Agreement Engine Trusted By The Courts
 
 A pipeline that turns credit card agreements into executable, auditable simulations. Given a contract and statement history, the engine walks a judge through each billing cycle with deterministic, clause-referenced explanations of how every number was computed.
 
