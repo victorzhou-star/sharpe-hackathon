@@ -56,7 +56,7 @@ Whatever you build must compile **back to English**. The regenerated text does n
 
 **Traceability** (links from original clauses to IR to regenerated English) is optional but can help a submission.
 
-Judges care about **completeness and fidelity** of the round-trip English to your executable (and thus to the substance of the original contract for hackathon purposes). They are **not** grading court-ready legal accuracy, and nothing here is legal advice.
+**Completeness and fidelity** means the English matches what your executable encodes (for hackathon scope). Judges **do not** grade court-ready legal accuracy. **Not** legal advice.
 
 The round-trip (English → executable → English) is required.
 
