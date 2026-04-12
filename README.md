@@ -40,6 +40,10 @@ How you get there is up to you. Examples people use:
 
 You can combine these or invent something different.
 
+**Execution data (facts and scenarios).** The contract Markdown only encodes the rules. To actually *run* them you also need **data**: dates, balances, payments, notices, deliveries, events (e.g. default, cure started), party actions, or whatever your model requires. Your demo should make it obvious **what inputs** you fed in and **what the engine produced** from those inputs. If output appears with no visible scenario data, judges cannot tell whether anything was really executed.
+
+**LLMs to generate sample data (required for generality).** Your pipeline should include a step that uses a **large language model** to propose or fill in **scenario data** (structured facts, events, timelines, or similar) so the executor can run. Organizers will **not** provide hand-written fixtures for the **held-out** contracts. If you only ever use manually authored JSON for the public samples, your system may not run on unseen Markdown at evaluation time. The LLM step is for **scenario generation** (or equivalent), not for **executable → English** (that path stays LLM-free; see Part 2). Document where the LLM runs, what it outputs, and how that data feeds the runner.
+
 ### Part 2: Code → English
 
 Whatever you build must compile **back to English**. The regenerated text does not need to match the original word for word, but it must:
@@ -48,7 +52,7 @@ Whatever you build must compile **back to English**. The regenerated text does n
 - Read clearly for someone who is not an engineer
 - Include obligations, conditions, and terms from the executable representation
 
-**Deterministic English; no LLMs on this step.** The path from your **executable representation to English** must be **deterministic**: same executable, same English every time (no randomness, temperature, or sampling). **Do not use large language models** on executable → English. LLMs elsewhere are fine (e.g. parsing natural language into your IR, suggesting structure, tooling) as long as **executable → English** is a normal program: templates, grammars, pretty-printers, etc. Say briefly how judges can check determinism (module boundaries, no LLM in the decompiler, how to re-run and diff).
+**Deterministic English; no LLMs on this step.** The path from your **executable representation to English** must be **deterministic**: same executable, same English every time (no randomness, temperature, or sampling). **Do not use large language models** on executable → English. LLMs elsewhere are fine, including **generating scenario/sample data** so you can run on held-out contracts (see **Execution data**), plus parsing natural language into your IR, suggesting structure, and tooling, as long as **executable → English** is a normal program: templates, grammars, pretty-printers, etc. Say briefly how judges can check determinism (module boundaries, no LLM in the decompiler, how to re-run and diff).
 
 **Traceability** (links from original clauses to IR to regenerated English) is optional but can help a submission.
 
@@ -75,19 +79,16 @@ You are not limited to these. The system should generalize beyond them.
 
 **Suggested starting point.** If you want one file to debug parsing and execution before tackling cross-references everywhere, the engagement letter or credit card agreement is often easier to reason about than a long lease or procurement amendment. That is a suggestion, not a rule.
 
-**Held-out evaluation.** Organizers will also run a **separate set** of Markdown contracts that are **not** in this repo. **Every** team gets the **same** held-out set so comparisons are fair. Treat the published samples as dev and demo material; aim for robustness on unseen `.md`, not memorizing these files.
+**Held-out evaluation.** Organizers use a **separate set** of Markdown contracts that are **not** in this repo. **Judges evaluate each submission by running it on the same set of held-out Markdown contracts** (one shared evaluation set for everyone, not a different bundle per team). There are **no** bundled scenario files for those documents; your pipeline must still produce runnable inputs, which is why the **LLM-based sample-data step** (above) is part of the expected design. Treat the published samples as dev and demo material; aim for robustness on unseen `.md`, not memorizing these files.
 
-### Sample contract use and rights
-
-- Samples are for this hackathon: development, testing, demos, and submission materials.
-- You may copy, adapt, and include excerpts or full files in your repo; if you ship long quotes, cite the original filename.
-- These documents are **illustrative only** and **not** legal advice. If you redistribute them outside your team or this event, follow copyright and terms from the sources.
+You may use the bundled `.md` files in this repo for development, demos, and your submission. They are **illustrative only** and **not** legal advice. If you republish contract text outside this event, follow copyright and [Law Insider](https://www.lawinsider.com) terms.
 
 ## Requirements
 
 - **Input:** Markdown (`.md`) contract text, consistent with the samples
 - Accept at least one provided sample as input and produce a working executable output
-- The executable representation must actually run: show it evaluating conditions, computing values, or enforcing terms
+- Include an **LLM step that generates sample/scenario data** (or equivalent) so execution can run on **arbitrary** contract Markdown, including **held-out** contracts that do not ship with hand-written fixtures (see **Execution data** under Part 1)
+- The executable representation must actually **run** on **concrete scenario data** (facts, events, amounts, dates, or equivalent): show what you passed in, that the engine evaluated conditions / computed values / enforced terms, and what came out. The contract Markdown alone is not enough to demonstrate that (see **Execution data** under Part 1)
 - The representation must compile back to English that preserves meaning; **executable → English** must be **deterministic** and **must not use LLMs** (see Part 2)
 - Include a demo of the full round-trip: English → executable → English
 - **Base demo:** runnable and checkable in **fewer than 10 steps** — document a numbered list (README or notebook) so judges can install, run, and verify without guessing
@@ -100,7 +101,7 @@ You are not limited to these. The system should generalize beyond them.
 | **Expressiveness**      | 25%    | How much of a real contract can your system capture? Obligations, conditions, deadlines, penalties, definitions, cross-references?     |
 | **Executability**       | 25%    | Does the computer actually *run* the representation? Conditions, values, state, enforcement, or is it only data?                       |
 | **Round-trip fidelity** | 25%    | Does English from the executable preserve meaning and completeness? Is executable → English deterministic and LLM-free, as required?   |
-| **Generality**          | 15%    | Does it work across contract types, including material not identical to the published samples? (Organizers use a shared held-out set.) |
+| **Generality**          | 15%    | Does it work across contract types, including material not identical to the published samples? (Judges evaluate each submission on the same set of held-out Markdown contracts.) |
 | **Creativity**          | 10%    | Novel approaches, clean design, ambitious scope                                                                                        |
 
 
@@ -125,7 +126,7 @@ Not required. They can help **Creativity** and **Expressiveness** if you have ti
 ## Rules
 
 - All code must be written during the hackathon
-- You may use any programming language, framework, or AI model **except** on **executable → English**, which must be deterministic and **must not use LLMs** (see Part 2)
+- You may use any programming language, framework, or AI model **except** on **executable → English**, which must be deterministic and **must not use LLMs** (see Part 2). **Expect to use an LLM** (or equivalent) to **generate scenario/sample data** so runs work on held-out contracts (see **Execution data**)
 - Pre-existing open-source libraries and tools are allowed (with attribution)
 
 ---
@@ -135,6 +136,7 @@ Not required. They can help **Creativity** and **Expressiveness** if you have ti
 You do not have to solve everything but teams that pick a direction for these tend to move faster:
 
 - **Intermediate representation (IR).** Is it a tree, a graph, rows in a table, bytecode, or something else? Can you version it as you iterate?
+- **Scenario data.** What format holds the facts you need to run the contract (JSON, YAML, structs, DB rows)? Where does an **LLM** turn contract text (or your IR) into that data for held-out runs? How does a judge reproduce or inspect a run?
 - **Time.** How do you represent "within 10 business days of receipt" versus calendar days? What is your clock for simulations?
 - **Parties.** Are obligations always attached to named roles, or do you infer from text on the fly?
 - **Partial coverage.** If you only formalize part of a contract, how do you report that in the regenerated English (omit, stub, or mark as unmodeled)?
@@ -142,11 +144,13 @@ You do not have to solve everything but teams that pick a direction for these te
 
 ## Concrete example (illustrative)
 
-Suppose you focus on the credit card agreement. A credible demo might: ingest the Markdown, extract the APR and fee rules you chose to model, represent them in your IR, run a few dated scenarios (on-time payment, late payment, different balance tiers if the text supports it), print numeric results, then emit regenerated English that restates those rules in plain language. The point is visible numbers and logic, not a perfect model of the full agreement.
+Suppose you focus on the credit card agreement. A credible demo might: ingest the Markdown, extract the APR and fee rules you chose to model, represent them in your IR, use an **LLM** to produce scenario rows or a timeline (on-time payment, late payment, different balance tiers if the text supports it), run the executor on that data, print numeric results, then emit regenerated English that restates those rules in plain language. The point is visible numbers and logic, not a perfect model of the full agreement.
 
 ## Pitfalls that show up a lot
 
 - **IR without a runner.** If nothing evaluates, you have a schema, not executability.
+- **Contract text only.** If the demo prints results but never shows the **input facts** that drove them, execution looks like a black box.
+- **Hand fixtures only.** If scenario data is always typed by humans and never LLM-generated from the contract, you may fail on **held-out** inputs where no fixtures exist.
 - **LLM in the decompiler by accident.** Wrapping "turn this JSON into prose" with an API call fails the hard rule even if the rest of the project is solid.
 - **Nondeterminism.** Floating-point surprises, unordered iteration over hash maps, timestamps in output. If judges diff twice and get different English, that is a problem.
 - **Demo drift.** The video shows one path; the README describes another. Keep them aligned.
@@ -162,6 +166,8 @@ Suppose you focus on the credit card agreement. A credible demo might: ingest th
 
 **Why ban LLMs only on executable → English?** So the round-trip has a verifiable, repeatable artifact. Parsing messy language with help from a model is a different problem from proving the compiled English is a function of your IR.
 
+**Why require an LLM for scenario/sample data?** Held-out Markdown does not ship with fixtures. Your pipeline needs a step that uses an **LLM** to propose structured facts and events so the executor can run on those files. That is separate from the executable → English ban.
+
 **Is Solidity required?** No. Use what fits your demo.
 
 ## What the base demo steps should include
@@ -170,9 +176,9 @@ Aim for steps that a judge can run in order without opening your codebase to gue
 
 1. Environment (language version, OS assumptions if any).
 2. How to install dependencies.
-3. Exact command(s) to run the pipeline on a named sample file.
+3. Exact command(s) to run the pipeline on a named sample file (and, if applicable, the scenario or fact data file or flags you use to drive execution).
 4. Where output appears (stdout, file path).
-5. How to confirm execution happened (numbers, state dump, log line you define).
+5. How to confirm execution happened (numbers, state dump, log line you define), including how to see or edit the **input data** that produced those results.
 6. How to run the English generation step alone, if split from parsing.
 7. How to verify determinism (e.g. run twice, diff).
 8. Optional: where the writeup or recorded demo lives.
@@ -184,7 +190,7 @@ You do not need ten steps for the sake of ten; you need **under ten** clear step
 - **IR:** Your internal representation of contract logic (whatever structure you choose).
 - **Executable:** The IR plus whatever runs it (interpreter, VM, evaluator).
 - **Round-trip:** Markdown in → executable → English out, with substance preserved.
-- **Held-out:** Contracts used for evaluation that are not in this public repo.
+- **Held-out:** The same set of Markdown contract files judges use to evaluate every submission; not shipped in this public repo.
 
 ## Contact
 
