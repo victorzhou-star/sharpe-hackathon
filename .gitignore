@@ -1,0 +1,16 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.DS_Store
+
+# Generated output (reproducible via CLI)
+# These are created by analyze/run commands — don't commit them
+*_english.md
+*_analysis.html
+*_execution.json
+# Generated IR and scenarios at repo root (but keep engine/schemas/ fixtures)
+/*.json
+!requirements.txt

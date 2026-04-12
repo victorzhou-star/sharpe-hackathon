@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>US Federal Credit Union - VISA Credit Card Statements</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Courier New', monospace; font-size: 13px; color: #1a1a1a; background: #fff; }
+
+  .statement {
+    max-width: 800px; margin: 40px auto; padding: 32px;
+    border: 2px solid #333; page-break-after: always;
+  }
+
+  .header { border-bottom: 3px solid #8B0000; padding-bottom: 12px; margin-bottom: 16px; }
+  .header h1 { font-size: 18px; color: #8B0000; }
+  .header h2 { font-size: 13px; font-weight: normal; color: #555; }
+
+  .account-info { display: flex; justify-content: space-between; margin-top: 8px; }
+  .account-info div { line-height: 1.6; }
+
+  .agreement-ref {
+    background: #f5f0f0; padding: 8px 12px; margin: 12px 0;
+    border-left: 4px solid #8B0000; font-size: 11px;
+  }
+
+  .section-label {
+    font-weight: bold; font-size: 13px; margin: 16px 0 6px 0;
+    border-bottom: 1px solid #999; padding-bottom: 2px;
+  }
+
+  table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+  th, td { text-align: left; padding: 3px 8px; font-size: 12px; }
+  th { background: #e8e8e8; border-bottom: 1px solid #999; }
+  td { border-bottom: 1px solid #ddd; }
+  .amt { text-align: right; font-family: 'Courier New', monospace; }
+  .total-row { font-weight: bold; border-top: 2px solid #333; }
+  .negative { color: #006600; }
+  .fee-row { color: #990000; }
+  .warning { background: #fff3cd; padding: 8px; margin: 8px 0; border: 1px solid #cc9900; font-size: 11px; }
+
+  .summary-box {
+    display: flex; justify-content: space-between; gap: 16px; margin: 12px 0;
+  }
+  .summary-box .box {
+    flex: 1; border: 1px solid #999; padding: 8px; text-align: center;
+  }
+  .summary-box .box .label { font-size: 10px; color: #666; }
+  .summary-box .box .value { font-size: 16px; font-weight: bold; margin-top: 4px; }
+
+  .interest-detail { background: #f9f9f9; padding: 8px; margin: 8px 0; }
+  .interest-detail table { margin: 0; }
+  .interest-detail th { background: #e4dada; }
+
+  .adb-detail { background: #f5f5f0; padding: 8px; margin: 8px 0; font-size: 11px; }
+  .adb-detail table td, .adb-detail table th { font-size: 11px; padding: 2px 6px; }
+
+  .payment-stub {
+    border: 2px dashed #999; padding: 12px; margin-top: 16px;
+    background: #fafafa;
+  }
+  .payment-stub h3 { font-size: 13px; margin-bottom: 8px; }
+
+  .meta { font-size: 10px; color: #888; margin-top: 12px; text-align: center; }
+</style>
+</head>
+<body>
+
+<!--
+  ================================================================
+  US FEDERAL CREDIT UNION - VISA CREDIT CARD STATEMENTS
+  ================================================================
+  Cardholder: James A. Wilson
+  Account:    4847-XXXX-XXXX-3156
+  Credit Limit: $8,000.00
+
+  AGREEMENT PARAMETERS (USFederalCU-VISA-credit-card-agreement):
+    purchase_apr:              17.99
+    purchase_daily_rate:       0.00049288  (17.99 / 365)
+    cash_advance_apr:          21.99
+    cash_advance_daily_rate:   0.00060247  (21.99 / 365)
+    cash_advance_fee:          max(3%, $10)
+    foreign_transaction_pct:   0.03
+    minimum_payment_pct:       0.02
+    minimum_payment_floor:     25.00
+    grace_period_days:         21
+    late_fee_first:            29.00
+    late_fee_subsequent:       40.00  (within 6 billing cycles)
+    returned_payment_fee:      29.00
+    over_credit_limit_fee:     0.00   (transactions declined instead)
+    annual_fee:                0.00
+    interest_method:           average_daily_balance_including_current_transactions
+    payment_waterfall_minimum: [interest_and_fees, lowest_rate_principal]
+    payment_waterfall_excess:  highest_rate_first
+
+  KEY DIFFERENCES FROM WESTEX:
+    - Two separate APR tiers (purchases vs cash advances)
+    - Higher rates (17.99% / 21.99% vs 12.9% flat)
+    - Cash advance fee (3% or $10)
+    - Foreign transaction fee (3% vs 1%)
+    - Higher minimum payment floor ($25 vs $15)
+    - Lower minimum payment percentage (2% vs 3%)
+    - Shorter grace period (21 days vs 25 days)
+    - Higher late fee ($29/$40 vs $25)
+    - No over-limit fee (transactions declined)
+
+  SCENARIO SUMMARY (6 billing cycles):
+    Cycle 1 (Jan): First use, purchases only, grace period, no interest
+    Cycle 2 (Feb): Paid in full, new purchases + cash advance, grace on purchases
+    Cycle 3 (Mar): Minimum only, grace lost, dual-rate interest begins
+    Cycle 4 (Apr): LATE payment + foreign transaction, late fee + foreign txn fee
+    Cycle 5 (May): Larger payment toward paydown
+    Cycle 6 (Jun): Pays in full, grace period restored next cycle
+  ================================================================
+-->
+
+
+<!-- ==================== STATEMENT 1: JANUARY 2026 ==================== -->
+<div class="statement" id="stmt-2026-01">
+  <div class="header">
+    <h1>US Federal Credit Union</h1>
+    <h2>VISA&reg; Signature Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>James A. Wilson</strong><br>
+        8742 Connecticut Avenue NW<br>
+        Washington, DC 20015
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4847-XXXX-XXXX-3156<br>
+        Statement Date: January 31, 2026<br>
+        Credit Limit: $8,000.00<br>
+        Available Credit: $5,609.50
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: US Federal Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 17.99% (daily: 0.049288%) | APR for Cash Advances: 21.99% (daily: 0.060247%)<br>
+    Cash Advance Fee: 3% or $10 (whichever greater) | Foreign Transaction Fee: 3%
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$2,390.50</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box" style="background:#8B0000; color:#fff;">
+      <div class="label" style="color:#e8c0c0;">New Balance</div>
+      <div class="value">$2,390.50</div>
+    </div>
+  </div>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>01/03</td><td>01/03</td><td>HOME DEPOT #4721 WASHINGTON DC</td><td>Purchase</td><td class="amt">$1,245.67</td></tr>
+      <tr><td>01/10</td><td>01/10</td><td>WHOLE FOODS MKT #10842 BETHESDA MD</td><td>Purchase</td><td class="amt">$198.33</td></tr>
+      <tr><td>01/18</td><td>01/18</td><td>DELTA AIR LINES 0062394817204</td><td>Purchase</td><td class="amt">$534.00</td></tr>
+      <tr><td>01/28</td><td>01/28</td><td>NORDSTROM #0356 TYSONS CORNER VA</td><td>Purchase</td><td class="amt">$412.50</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$2,390.50</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.049288%</td><td class="amt">17.99%</td><td class="amt">$0.00</td><td class="amt">31</td><td class="amt">$0.00</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.060247%</td><td class="amt">21.99%</td><td class="amt">$0.00</td><td class="amt">31</td><td class="amt">$0.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$0.00</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period in effect: YES (no previous balance). New purchases have at least 21 days before interest accrues.
+    </p>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$2,390.50</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$47.81</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>02/21/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(2% &times; $2,390.50, $25.00) = max($47.81, $25.00) = <strong>$47.81</strong><br>
+      Mail payments to: US Federal Credit Union, P.O. Box 25800, Washington, DC 20027
+    </p>
+  </div>
+  <div class="meta">Statement 1 of 6 | Billing Cycle: 01/01/2026 - 01/31/2026 | 31 days</div>
+</div>
+
+
+<!-- ==================== STATEMENT 2: FEBRUARY 2026 ==================== -->
+<!--
+  KEY SCENARIO: Paid in full. Grace period on purchases. Cash advance of $800
+  on 02/25 with $24 fee. Cash advance interest accrues from posting date at 21.99%.
+
+  Cash Advance ADB:
+    02/01-02/24:  $0.00  x 24 = $0.00
+    02/25-02/28:  $824.00 x 4 = $3,296.00
+    CA ADB = $3,296.00 / 28 = $117.71
+    CA Interest = $117.71 x 0.00060247 x 28 = $1.99
+-->
+<div class="statement" id="stmt-2026-02">
+  <div class="header">
+    <h1>US Federal Credit Union</h1>
+    <h2>VISA&reg; Signature Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>James A. Wilson</strong><br>
+        8742 Connecticut Avenue NW<br>
+        Washington, DC 20015
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4847-XXXX-XXXX-3156<br>
+        Statement Date: February 28, 2026<br>
+        Credit Limit: $8,000.00<br>
+        Available Credit: $5,983.73
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: US Federal Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 17.99% (daily: 0.049288%) | APR for Cash Advances: 21.99% (daily: 0.060247%)<br>
+    Cash Advance Fee: 3% or $10 (whichever greater) | Foreign Transaction Fee: 3%
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$2,390.50</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">-$2,390.50</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$1,190.28</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$800.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$24.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$1.99</div>
+    </div>
+    <div class="box" style="background:#8B0000; color:#fff;">
+      <div class="label" style="color:#e8c0c0;">New Balance</div>
+      <div class="value">$2,016.27</div>
+    </div>
+  </div>
+
+  <div class="section-label">Payments &amp; Credits</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="negative"><td>02/18</td><td>02/18</td><td>ONLINE PAYMENT RECEIVED - THANK YOU</td><td>Payment</td><td class="amt">-$2,390.50</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>02/05</td><td>02/05</td><td>APPLE STORE #R045 WASHINGTON DC</td><td>Purchase</td><td class="amt">$999.00</td></tr>
+      <tr><td>02/12</td><td>02/12</td><td>TRADER JOES #0659 WASHINGTON DC</td><td>Purchase</td><td class="amt">$156.78</td></tr>
+      <tr><td>02/20</td><td>02/20</td><td>UBER EATS HELP.UBER.COM</td><td>Purchase</td><td class="amt">$34.50</td></tr>
+      <tr><td>02/25</td><td>02/25</td><td>ATM CASH ADVANCE - CHASE #44190 DC</td><td>Cash Advance</td><td class="amt">$800.00</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$1,190.28</td></tr>
+      <tr class="total-row"><td colspan="4">Total Cash Advances</td><td class="amt">$800.00</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Fees</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Description</th><th>Reference</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="fee-row"><td>02/25</td><td>CASH ADVANCE FEE</td><td>max(3% &times; $800.00, $10.00) = $24.00</td><td class="amt">$24.00</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="3">Total Fees</td><td class="amt">$24.00</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.049288%</td><td class="amt">17.99%</td><td class="amt">$0.00</td><td class="amt">28</td><td class="amt">$0.00</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.060247%</td><td class="amt">21.99%</td><td class="amt">$117.71</td><td class="amt">28</td><td class="amt">$1.99</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$1.99</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period on purchases: YES (previous balance paid in full $2,390.50 on 02/18, before due date 02/21).<br>
+      Cash advances: NO grace period. Interest accrues from posting date (02/25) at cash advance APR of 21.99%.
+      Cash advance fee of $24.00 added to cash advance balance for interest purposes.
+    </p>
+  </div>
+
+  <div class="section-label">Average Daily Balance Detail</div>
+  <div class="adb-detail">
+    <p><strong>Purchase Balance (17.99% APR) - Grace Period in Effect, Not Applied</strong></p>
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="5" style="text-align:center; color:#666;">Grace period - no interest on purchases</td></tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top:8px;"><strong>Cash Advance Balance (21.99% APR)</strong></p>
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>02/01 - 02/24</td><td class="amt">24</td><td class="amt">$0.00</td><td class="amt">$0.00</td><td>No cash advance balance</td></tr>
+        <tr><td>02/25 - 02/28</td><td class="amt">4</td><td class="amt">$824.00</td><td class="amt">$3,296.00</td><td>+Cash Advance $800.00 +Fee $24.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">28</td><td></td><td class="amt">$3,296.00</td><td></td></tr>
+        <tr><td colspan="3"><strong>Cash Advance ADB</strong></td><td class="amt"><strong>$117.71</strong></td><td></td></tr>
+        <tr><td colspan="3"><strong>Cash Advance Interest</strong></td><td class="amt"><strong>$1.99</strong></td><td>= $117.71 &times; 0.00060247 &times; 28</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$2,016.27</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$40.33</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>03/21/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(2% &times; $2,016.27, $25.00) = max($40.33, $25.00) = <strong>$40.33</strong><br>
+      Mail payments to: US Federal Credit Union, P.O. Box 25800, Washington, DC 20027
+    </p>
+  </div>
+  <div class="meta">Statement 2 of 6 | Billing Cycle: 02/01/2026 - 02/28/2026 | 28 days</div>
+</div>
+
+
+<!-- ==================== STATEMENT 3: MARCH 2026 ==================== -->
+<!--
+  KEY SCENARIO: Minimum payment only ($40.33). Grace period LOST.
+  Dual-rate interest: purchases at 17.99%, cash advances at 21.99%.
+  Payment allocation: minimum applied to lowest-rate (purchases) first.
+
+  Purchase ADB:
+    03/01-03/03:  $1,190.28  x 3  = $3,570.84
+    03/04-03/11:  $1,458.17  x 8  = $11,665.36   (+Purchase $267.89)
+    03/12-03/14:  $1,803.29  x 3  = $5,409.87    (+Purchase $345.12)
+    03/15-03/21:  $1,762.96  x 7  = $12,340.72   (-Payment $40.33 applied to purchases)
+    03/22-03/31:  $1,825.36  x 10 = $18,253.60   (+Purchase $62.40)
+    Purchase ADB Sum = $51,240.39 / 31 = $1,652.92
+    Purchase Interest = $1,652.92 x 0.00049288 x 31 = $25.25
+
+  Cash Advance ADB:
+    03/01-03/31:  $825.99 x 31 = $25,605.69
+    CA ADB = $825.99
+    CA Interest = $825.99 x 0.00060247 x 31 = $15.42
+
+  Total Interest = $25.25 + $15.42 = $40.67
+-->
+<div class="statement" id="stmt-2026-03">
+  <div class="header">
+    <h1>US Federal Credit Union</h1>
+    <h2>VISA&reg; Signature Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>James A. Wilson</strong><br>
+        8742 Connecticut Avenue NW<br>
+        Washington, DC 20015
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4847-XXXX-XXXX-3156<br>
+        Statement Date: March 31, 2026<br>
+        Credit Limit: $8,000.00<br>
+        Available Credit: $5,308.00
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: US Federal Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 17.99% (daily: 0.049288%) | APR for Cash Advances: 21.99% (daily: 0.060247%)<br>
+    Cash Advance Fee: 3% or $10 (whichever greater) | Foreign Transaction Fee: 3%
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$2,016.27</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">-$40.33</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$675.41</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$40.67</div>
+    </div>
+    <div class="box" style="background:#8B0000; color:#fff;">
+      <div class="label" style="color:#e8c0c0;">New Balance</div>
+      <div class="value">$2,692.02</div>
+    </div>
+  </div>
+
+  <div class="section-label">Payments &amp; Credits</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="negative"><td>03/15</td><td>03/15</td><td>ONLINE PAYMENT RECEIVED - THANK YOU</td><td>Payment</td><td class="amt">-$40.33</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>03/04</td><td>03/04</td><td>AMAZON.COM AMZN.COM/BILL WA</td><td>Purchase</td><td class="amt">$267.89</td></tr>
+      <tr><td>03/12</td><td>03/12</td><td>COSTCO WHSE #1082 ARLINGTON VA</td><td>Purchase</td><td class="amt">$345.12</td></tr>
+      <tr><td>03/22</td><td>03/22</td><td>SHELL OIL 09441283 WASHINGTON DC</td><td>Purchase</td><td class="amt">$62.40</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$675.41</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.049288%</td><td class="amt">17.99%</td><td class="amt">$1,652.92</td><td class="amt">31</td><td class="amt">$25.25</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.060247%</td><td class="amt">21.99%</td><td class="amt">$825.99</td><td class="amt">31</td><td class="amt">$15.42</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$40.67</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period on purchases: NO. Previous balance of $2,016.27 was NOT paid in full
+      (minimum payment of $40.33 received 03/15/2026; due date was 03/21/2026).<br>
+      Interest now accrues on BOTH purchase and cash advance balances at their respective rates.<br>
+      Payment of $40.33 applied to purchase balance (lowest APR) per payment allocation rules.
+    </p>
+  </div>
+
+  <div class="section-label">Average Daily Balance Detail</div>
+  <div class="adb-detail">
+    <p><strong>Purchase Balance (17.99% APR)</strong></p>
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>03/01 - 03/03</td><td class="amt">3</td><td class="amt">$1,190.28</td><td class="amt">$3,570.84</td><td>Previous purchase balance</td></tr>
+        <tr><td>03/04 - 03/11</td><td class="amt">8</td><td class="amt">$1,458.17</td><td class="amt">$11,665.36</td><td>+Purchase $267.89</td></tr>
+        <tr><td>03/12 - 03/14</td><td class="amt">3</td><td class="amt">$1,803.29</td><td class="amt">$5,409.87</td><td>+Purchase $345.12</td></tr>
+        <tr><td>03/15 - 03/21</td><td class="amt">7</td><td class="amt">$1,762.96</td><td class="amt">$12,340.72</td><td>-Payment $40.33 (applied to purchases)</td></tr>
+        <tr><td>03/22 - 03/31</td><td class="amt">10</td><td class="amt">$1,825.36</td><td class="amt">$18,253.60</td><td>+Purchase $62.40</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">31</td><td></td><td class="amt">$51,240.39</td><td></td></tr>
+        <tr><td colspan="3"><strong>Purchase ADB</strong></td><td class="amt"><strong>$1,652.92</strong></td><td></td></tr>
+        <tr><td colspan="3"><strong>Purchase Interest</strong></td><td class="amt"><strong>$25.25</strong></td><td>= $1,652.92 &times; 0.00049288 &times; 31</td></tr>
+      </tfoot>
+    </table>
+
+    <p style="margin-top:8px;"><strong>Cash Advance Balance (21.99% APR)</strong></p>
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>03/01 - 03/31</td><td class="amt">31</td><td class="amt">$825.99</td><td class="amt">$25,605.69</td><td>Cash advance balance carried ($800 + $24 fee + $1.99 interest)</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">31</td><td></td><td class="amt">$25,605.69</td><td></td></tr>
+        <tr><td colspan="3"><strong>Cash Advance ADB</strong></td><td class="amt"><strong>$825.99</strong></td><td></td></tr>
+        <tr><td colspan="3"><strong>Cash Advance Interest</strong></td><td class="amt"><strong>$15.42</strong></td><td>= $825.99 &times; 0.00060247 &times; 31</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$2,692.02</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$53.84</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>04/21/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(2% &times; $2,692.02, $25.00) = max($53.84, $25.00) = <strong>$53.84</strong><br>
+      Mail payments to: US Federal Credit Union, P.O. Box 25800, Washington, DC 20027
+    </p>
+  </div>
+  <div class="meta">Statement 3 of 6 | Billing Cycle: 03/01/2026 - 03/31/2026 | 31 days</div>
+</div>
+
+
+<!-- ==================== STATEMENT 4: APRIL 2026 ==================== -->
+<!--
+  KEY SCENARIO: LATE PAYMENT + FOREIGN TRANSACTION
+  Payment of $53.84 received 04/24 (3 days late, due was 04/21).
+  Late fee: $29.00 (first offense).
+  Foreign transaction: London hotel $441.00 + 3% fee = $13.23.
+
+  Purchase ADB:
+    04/01-04/07:  $1,850.61 x 7  = $12,954.27
+    04/08-04/17:  $2,040.06 x 10 = $20,400.60   (+Purchase $189.45)
+    04/18-04/21:  $2,494.29 x 4  = $9,977.16    (+Foreign purchase $441.00 +fee $13.23)
+    04/22-04/23:  $2,523.29 x 2  = $5,046.58    (+Late fee $29.00)
+    04/24-04/30:  $2,469.45 x 7  = $17,286.15   (-Payment $53.84)
+    Purchase ADB Sum = $65,664.76 / 30 = $2,188.83
+    Purchase Interest = $2,188.83 x 0.00049288 x 30 = $32.36
+
+  Cash Advance ADB:
+    04/01-04/30:  $841.41 x 30 = $25,242.30
+    CA ADB = $841.41
+    CA Interest = $841.41 x 0.00060247 x 30 = $15.21
+
+  Total Interest = $32.36 + $15.21 = $47.57
+-->
+<div class="statement" id="stmt-2026-04">
+  <div class="header">
+    <h1>US Federal Credit Union</h1>
+    <h2>VISA&reg; Signature Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>James A. Wilson</strong><br>
+        8742 Connecticut Avenue NW<br>
+        Washington, DC 20015
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4847-XXXX-XXXX-3156<br>
+        Statement Date: April 30, 2026<br>
+        Credit Limit: $8,000.00<br>
+        Available Credit: $4,641.57
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: US Federal Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 17.99% (daily: 0.049288%) | APR for Cash Advances: 21.99% (daily: 0.060247%)<br>
+    Cash Advance Fee: 3% or $10 (whichever greater) | Foreign Transaction Fee: 3%
+  </div>
+
+  <div class="warning">
+    <strong>LATE PAYMENT NOTICE:</strong> Your minimum payment of $53.84 due 04/21/2026 was received on 04/24/2026.
+    A late payment fee of $29.00 has been assessed. A subsequent late payment within 6 billing cycles will incur a fee of $40.00.
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$2,692.02</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">-$53.84</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$630.45</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$42.23</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$47.57</div>
+    </div>
+    <div class="box" style="background:#8B0000; color:#fff;">
+      <div class="label" style="color:#e8c0c0;">New Balance</div>
+      <div class="value">$3,358.43</div>
+    </div>
+  </div>
+
+  <div class="section-label">Payments &amp; Credits</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="negative"><td>04/24</td><td>04/24</td><td>ONLINE PAYMENT RECEIVED - THANK YOU</td><td>Payment</td><td class="amt">-$53.84</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>04/08</td><td>04/08</td><td>TARGET #01924 WASHINGTON DC</td><td>Purchase</td><td class="amt">$189.45</td></tr>
+      <tr><td>04/18</td><td>04/18</td><td>THE KENSINGTON HOTEL LONDON GB</td><td>Intl Purchase</td><td class="amt">$441.00</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$630.45</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Fees</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Description</th><th>Reference</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="fee-row"><td>04/18</td><td>FOREIGN TRANSACTION FEE</td><td>3% &times; $441.00 = $13.23</td><td class="amt">$13.23</td></tr>
+      <tr class="fee-row"><td>04/22</td><td>LATE PAYMENT FEE</td><td>First occurrence - $29.00</td><td class="amt">$29.00</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="3">Total Fees</td><td class="amt">$42.23</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.049288%</td><td class="amt">17.99%</td><td class="amt">$2,188.83</td><td class="amt">30</td><td class="amt">$32.36</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.060247%</td><td class="amt">21.99%</td><td class="amt">$841.41</td><td class="amt">30</td><td class="amt">$15.21</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$47.57</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period on purchases: NO. Previous balance NOT paid in full.<br>
+      Foreign transaction fee of 3% assessed on international purchase of $441.00.<br>
+      Late fee and foreign transaction fee added to purchase balance for interest calculation purposes.
+    </p>
+  </div>
+
+  <div class="section-label">Average Daily Balance Detail</div>
+  <div class="adb-detail">
+    <p><strong>Purchase Balance (17.99% APR)</strong></p>
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>04/01 - 04/07</td><td class="amt">7</td><td class="amt">$1,850.61</td><td class="amt">$12,954.27</td><td>Previous purchase balance</td></tr>
+        <tr><td>04/08 - 04/17</td><td class="amt">10</td><td class="amt">$2,040.06</td><td class="amt">$20,400.60</td><td>+Purchase $189.45</td></tr>
+        <tr><td>04/18 - 04/21</td><td class="amt">4</td><td class="amt">$2,494.29</td><td class="amt">$9,977.16</td><td>+Purchase $441.00 +Foreign Fee $13.23</td></tr>
+        <tr><td>04/22 - 04/23</td><td class="amt">2</td><td class="amt">$2,523.29</td><td class="amt">$5,046.58</td><td>+Late Fee $29.00</td></tr>
+        <tr><td>04/24 - 04/30</td><td class="amt">7</td><td class="amt">$2,469.45</td><td class="amt">$17,286.15</td><td>-Payment $53.84</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">30</td><td></td><td class="amt">$65,664.76</td><td></td></tr>
+        <tr><td colspan="3"><strong>Purchase ADB</strong></td><td class="amt"><strong>$2,188.83</strong></td><td></td></tr>
+        <tr><td colspan="3"><strong>Purchase Interest</strong></td><td class="amt"><strong>$32.36</strong></td><td>= $2,188.83 &times; 0.00049288 &times; 30</td></tr>
+      </tfoot>
+    </table>
+
+    <p style="margin-top:8px;"><strong>Cash Advance Balance (21.99% APR)</strong></p>
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>04/01 - 04/30</td><td class="amt">30</td><td class="amt">$841.41</td><td class="amt">$25,242.30</td><td>Cash advance balance carried ($825.99 + $15.42 prior interest)</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">30</td><td></td><td class="amt">$25,242.30</td><td></td></tr>
+        <tr><td colspan="3"><strong>Cash Advance ADB</strong></td><td class="amt"><strong>$841.41</strong></td><td></td></tr>
+        <tr><td colspan="3"><strong>Cash Advance Interest</strong></td><td class="amt"><strong>$15.21</strong></td><td>= $841.41 &times; 0.00060247 &times; 30</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$3,358.43</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$67.17</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>05/21/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(2% &times; $3,358.43, $25.00) = max($67.17, $25.00) = <strong>$67.17</strong><br>
+      Mail payments to: US Federal Credit Union, P.O. Box 25800, Washington, DC 20027
+    </p>
+  </div>
+  <div class="meta">Statement 4 of 6 | Billing Cycle: 04/01/2026 - 04/30/2026 | 30 days</div>
+</div>
+
+
+<!-- ==================== STATEMENT 5: MAY 2026 ==================== -->
+<!--
+  KEY SCENARIO: Larger payment of $500.00 (well above minimum).
+  Excess above minimum applied to highest-rate balance (cash advances at 21.99%).
+
+  Purchase ADB (approximate, tracking purchase portion):
+    05/01-05/04:  $2,517.02 x 4  = $10,068.08
+    05/05-05/11:  $2,604.35 x 7  = $18,230.45   (+Purchase $87.33)
+    05/12-05/24:  $2,104.35 x 13 = $27,356.55   (-$500 payment: min to purchases, excess to CA)
+    05/25-05/31:  $2,320.25 x 7  = $16,241.75   (+Purchase $215.90)
+    Purchase ADB Sum = $71,896.83 / 31 = $2,319.25
+    Purchase Interest = $2,319.25 x 0.00049288 x 31 = $35.42
+
+  Cash Advance ADB:
+    05/01-05/11:  $856.62 x 11 = $9,422.82   ($841.41 + $15.21 prior interest)
+    05/12-05/31:  $423.79 x 20 = $8,475.80   (-$432.83 excess payment applied to CA)
+    CA ADB Sum = $17,898.62 / 31 = $577.37
+    CA Interest = $577.37 x 0.00060247 x 31 = $10.78
+
+  Total Interest = $35.42 + $10.78 = $46.20
+
+  Payment allocation of $500.00:
+    Minimum ($67.17) applied to lowest rate (purchases):
+      - Interest/fees: $32.36 (purchase interest) + $0 fees = $32.36
+      - Principal: $67.17 - $32.36 = $34.81 to purchase principal
+    Excess ($432.83) applied to highest rate (cash advances at 21.99%):
+      - $432.83 to cash advance balance
+-->
+<div class="statement" id="stmt-2026-05">
+  <div class="header">
+    <h1>US Federal Credit Union</h1>
+    <h2>VISA&reg; Signature Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>James A. Wilson</strong><br>
+        8742 Connecticut Avenue NW<br>
+        Washington, DC 20015
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4847-XXXX-XXXX-3156<br>
+        Statement Date: May 31, 2026<br>
+        Credit Limit: $8,000.00<br>
+        Available Credit: $4,787.21
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: US Federal Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 17.99% (daily: 0.049288%) | APR for Cash Advances: 21.99% (daily: 0.060247%)<br>
+    Cash Advance Fee: 3% or $10 (whichever greater) | Foreign Transaction Fee: 3%
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$3,358.43</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">-$500.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$303.23</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$51.13</div>
+    </div>
+    <div class="box" style="background:#8B0000; color:#fff;">
+      <div class="label" style="color:#e8c0c0;">New Balance</div>
+      <div class="value">$3,212.79</div>
+    </div>
+  </div>
+
+  <div class="section-label">Payments &amp; Credits</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="negative"><td>05/12</td><td>05/12</td><td>ONLINE PAYMENT RECEIVED - THANK YOU</td><td>Payment</td><td class="amt">-$500.00</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>05/05</td><td>05/05</td><td>WHOLE FOODS MKT #10842 BETHESDA MD</td><td>Purchase</td><td class="amt">$87.33</td></tr>
+      <tr><td>05/25</td><td>05/25</td><td>AMAZON.COM AMZN.COM/BILL WA</td><td>Purchase</td><td class="amt">$215.90</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$303.23</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.049288%</td><td class="amt">17.99%</td><td class="amt">$2,319.25</td><td class="amt">31</td><td class="amt">$35.42</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.060247%</td><td class="amt">21.99%</td><td class="amt">$577.37</td><td class="amt">31</td><td class="amt">$15.71</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$51.13</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period on purchases: NO. Previous balance NOT paid in full.<br>
+      Payment of $500.00 applied: minimum ($67.17) to lowest-rate purchase balance, excess ($432.83)
+      to highest-rate cash advance balance per CARD Act allocation rules.
+    </p>
+  </div>
+
+  <div class="section-label">Average Daily Balance Detail</div>
+  <div class="adb-detail">
+    <p><strong>Purchase Balance (17.99% APR)</strong></p>
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>05/01 - 05/04</td><td class="amt">4</td><td class="amt">$2,517.02</td><td class="amt">$10,068.08</td><td>Previous purchase balance</td></tr>
+        <tr><td>05/05 - 05/11</td><td class="amt">7</td><td class="amt">$2,604.35</td><td class="amt">$18,230.45</td><td>+Purchase $87.33</td></tr>
+        <tr><td>05/12 - 05/24</td><td class="amt">13</td><td class="amt">$2,104.35</td><td class="amt">$27,356.55</td><td>-Min payment portion $500.00 applied</td></tr>
+        <tr><td>05/25 - 05/31</td><td class="amt">7</td><td class="amt">$2,320.25</td><td class="amt">$16,241.75</td><td>+Purchase $215.90</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">31</td><td></td><td class="amt">$71,896.83</td><td></td></tr>
+        <tr><td colspan="3"><strong>Purchase ADB</strong></td><td class="amt"><strong>$2,319.25</strong></td><td></td></tr>
+        <tr><td colspan="3"><strong>Purchase Interest</strong></td><td class="amt"><strong>$35.42</strong></td><td>= $2,319.25 &times; 0.00049288 &times; 31</td></tr>
+      </tfoot>
+    </table>
+
+    <p style="margin-top:8px;"><strong>Cash Advance Balance (21.99% APR)</strong></p>
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>05/01 - 05/11</td><td class="amt">11</td><td class="amt">$856.62</td><td class="amt">$9,422.82</td><td>CA balance ($841.41 + $15.21 prior interest)</td></tr>
+        <tr><td>05/12 - 05/31</td><td class="amt">20</td><td class="amt">$423.79</td><td class="amt">$8,475.80</td><td>-Excess payment $432.83 applied to CA</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">31</td><td></td><td class="amt">$17,898.62</td><td></td></tr>
+        <tr><td colspan="3"><strong>Cash Advance ADB</strong></td><td class="amt"><strong>$577.37</strong></td><td></td></tr>
+        <tr><td colspan="3"><strong>Cash Advance Interest</strong></td><td class="amt"><strong>$15.71</strong></td><td>= $577.37 &times; 0.00060247 &times; 31</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="section-label">Payment Application Detail</div>
+  <div class="adb-detail">
+    <table>
+      <thead>
+        <tr><th>Component</th><th class="amt">Amount</th><th>Applied To</th><th>Rate</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Minimum Payment</td><td class="amt">$67.17</td><td>Purchase balance (lowest APR)</td><td>17.99%</td></tr>
+        <tr><td>&nbsp;&nbsp;Interest &amp; Fees</td><td class="amt">$32.36</td><td>Prior cycle purchase interest</td><td></td></tr>
+        <tr><td>&nbsp;&nbsp;Principal</td><td class="amt">$34.81</td><td>Purchase principal reduction</td><td></td></tr>
+        <tr><td>Excess Payment</td><td class="amt">$432.83</td><td>Cash advance balance (highest APR)</td><td>21.99%</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">$500.00</td><td></td><td></td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$3,212.79</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$64.26</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>06/21/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(2% &times; $3,212.79, $25.00) = max($64.26, $25.00) = <strong>$64.26</strong><br>
+      Mail payments to: US Federal Credit Union, P.O. Box 25800, Washington, DC 20027
+    </p>
+  </div>
+  <div class="meta">Statement 5 of 6 | Billing Cycle: 05/01/2026 - 05/31/2026 | 31 days</div>
+</div>
+
+
+<!-- ==================== STATEMENT 6: JUNE 2026 ==================== -->
+<!--
+  KEY SCENARIO: Pays full balance of $3,212.79 on 06/05.
+  Grace period RESTORED for next cycle (July).
+  New purchases of $457.67 - grace period applies for purchases since paid in full.
+  No cash advance balance remaining.
+-->
+<div class="statement" id="stmt-2026-06">
+  <div class="header">
+    <h1>US Federal Credit Union</h1>
+    <h2>VISA&reg; Signature Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>James A. Wilson</strong><br>
+        8742 Connecticut Avenue NW<br>
+        Washington, DC 20015
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4847-XXXX-XXXX-3156<br>
+        Statement Date: June 30, 2026<br>
+        Credit Limit: $8,000.00<br>
+        Available Credit: $7,542.33
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: US Federal Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 17.99% (daily: 0.049288%) | APR for Cash Advances: 21.99% (daily: 0.060247%)<br>
+    Cash Advance Fee: 3% or $10 (whichever greater) | Foreign Transaction Fee: 3%
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$3,212.79</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">-$3,212.79</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$457.67</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box" style="background:#8B0000; color:#fff;">
+      <div class="label" style="color:#e8c0c0;">New Balance</div>
+      <div class="value">$457.67</div>
+    </div>
+  </div>
+
+  <div class="section-label">Payments &amp; Credits</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="negative"><td>06/05</td><td>06/05</td><td>ONLINE PAYMENT RECEIVED - THANK YOU</td><td>Payment</td><td class="amt">-$3,212.79</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>06/15</td><td>06/15</td><td>CRATE AND BARREL #062 WASHINGTON DC</td><td>Purchase</td><td class="amt">$345.00</td></tr>
+      <tr><td>06/22</td><td>06/22</td><td>WHOLE FOODS MKT #10842 BETHESDA MD</td><td>Purchase</td><td class="amt">$112.67</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$457.67</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.049288%</td><td class="amt">17.99%</td><td class="amt">$0.00</td><td class="amt">30</td><td class="amt">$0.00</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.060247%</td><td class="amt">21.99%</td><td class="amt">$0.00</td><td class="amt">30</td><td class="amt">$0.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$0.00</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period on purchases: RESTORED. Full balance of $3,212.79 paid on 06/05/2026
+      (before due date of 06/21/2026). All balances (purchase and cash advance) cleared to $0.00.
+      New purchases have at least 21 days before interest accrues.<br>
+      <strong>Note:</strong> If new balance of $457.67 is paid in full by 07/21/2026,
+      grace period will continue for the following cycle.
+    </p>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$457.67</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$25.00</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>07/21/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(2% &times; $457.67, $25.00) = max($9.15, $25.00) = <strong>$25.00</strong><br>
+      Mail payments to: US Federal Credit Union, P.O. Box 25800, Washington, DC 20027<br>
+      <strong>Tip:</strong> Pay the full $457.67 by 07/21/2026 to maintain your interest-free grace period.
+    </p>
+  </div>
+  <div class="meta">Statement 6 of 6 | Billing Cycle: 06/01/2026 - 06/30/2026 | 30 days</div>
+</div>
+
+
+<!--
+  ================================================================
+  VERIFICATION SUMMARY (for runtime cross-check)
+  ================================================================
+  Cycle | Prev Bal    | Payments    | Purchases  | CA       | Fees    | Interest | New Bal     | Min Due  | Grace?
+  1     | $0.00       | $0.00       | $2,390.50  | $0.00    | $0.00   | $0.00    | $2,390.50   | $47.81   | YES
+  2     | $2,390.50   | $2,390.50   | $1,190.28  | $800.00  | $24.00  | $1.99    | $2,016.27   | $40.33   | PURCH ONLY
+  3     | $2,016.27   | $40.33      | $675.41    | $0.00    | $0.00   | $40.67   | $2,692.02   | $53.84   | NO
+  4     | $2,692.02   | $53.84      | $630.45    | $0.00    | $42.23  | $47.57   | $3,358.43   | $67.17   | NO
+  5     | $3,358.43   | $500.00     | $303.23    | $0.00    | $0.00   | $51.13   | $3,212.79   | $64.26   | NO
+  6     | $3,212.79   | $3,212.79   | $457.67    | $0.00    | $0.00   | $0.00    | $457.67     | $25.00   | YES
+
+  Total interest paid across 6 cycles: $141.36
+  Total fees paid across 6 cycles: $66.23
+  Total cash advance fees: $24.00
+  Total late fees: $29.00
+  Total foreign transaction fees: $13.23
+
+  KEY DIFFERENCES FROM WESTEX SET (for runtime comparison):
+  - Dual APR tiers require separate ADB tracking per balance type
+  - Cash advance fee is percentage-based (3% or $10 min) vs WesTex no fee
+  - Foreign transaction fee is 3% vs WesTex 1%
+  - Higher base rates (17.99%/21.99% vs 12.9% flat)
+  - Minimum payment: 2%/$25 floor vs 3%/$15 floor
+  - Grace period: 21 days vs 25 days
+  - Late fee: $29/$40 tiered vs $25 flat
+  - Payment allocation across multiple rate tiers exercises CARD Act rules
+  ================================================================
+-->
+
+</body>
+</html>

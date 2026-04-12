@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WesTex Community Credit Union - VISA Credit Card Statements</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Courier New', monospace; font-size: 13px; color: #1a1a1a; background: #fff; }
+
+  .statement {
+    max-width: 800px; margin: 40px auto; padding: 32px;
+    border: 2px solid #333; page-break-after: always;
+  }
+
+  .header { border-bottom: 3px solid #003366; padding-bottom: 12px; margin-bottom: 16px; }
+  .header h1 { font-size: 18px; color: #003366; }
+  .header h2 { font-size: 13px; font-weight: normal; color: #555; }
+
+  .account-info { display: flex; justify-content: space-between; margin-top: 8px; }
+  .account-info div { line-height: 1.6; }
+
+  .agreement-ref {
+    background: #f0f0f0; padding: 8px 12px; margin: 12px 0;
+    border-left: 4px solid #003366; font-size: 11px;
+  }
+
+  .section-label {
+    font-weight: bold; font-size: 13px; margin: 16px 0 6px 0;
+    border-bottom: 1px solid #999; padding-bottom: 2px;
+  }
+
+  table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+  th, td { text-align: left; padding: 3px 8px; font-size: 12px; }
+  th { background: #e8e8e8; border-bottom: 1px solid #999; }
+  td { border-bottom: 1px solid #ddd; }
+  .amt { text-align: right; font-family: 'Courier New', monospace; }
+  .total-row { font-weight: bold; border-top: 2px solid #333; }
+  .negative { color: #006600; }
+  .fee-row { color: #990000; }
+  .warning { background: #fff3cd; padding: 8px; margin: 8px 0; border: 1px solid #cc9900; font-size: 11px; }
+
+  .summary-box {
+    display: flex; justify-content: space-between; gap: 16px; margin: 12px 0;
+  }
+  .summary-box .box {
+    flex: 1; border: 1px solid #999; padding: 8px; text-align: center;
+  }
+  .summary-box .box .label { font-size: 10px; color: #666; }
+  .summary-box .box .value { font-size: 16px; font-weight: bold; margin-top: 4px; }
+
+  .interest-detail { background: #f9f9f9; padding: 8px; margin: 8px 0; }
+  .interest-detail table { margin: 0; }
+  .interest-detail th { background: #dde4ec; }
+
+  .adb-detail { background: #f5f5f0; padding: 8px; margin: 8px 0; font-size: 11px; }
+  .adb-detail table td, .adb-detail table th { font-size: 11px; padding: 2px 6px; }
+
+  .payment-stub {
+    border: 2px dashed #999; padding: 12px; margin-top: 16px;
+    background: #fafafa;
+  }
+  .payment-stub h3 { font-size: 13px; margin-bottom: 8px; }
+
+  .meta { font-size: 10px; color: #888; margin-top: 12px; text-align: center; }
+</style>
+</head>
+<body>
+
+<!--
+  ============================================================
+  WESTEX COMMUNITY CREDIT UNION - VISA CREDIT CARD STATEMENTS
+  ============================================================
+  Cardholder: Maria R. Chen
+  Account:    4256-XXXX-XXXX-8901
+  Credit Limit: $3,000.00
+  APR: 12.9% (daily periodic rate: 0.035342%)
+  Agreement: WesTex-VISA-credit-card-agreement.md
+
+  AGREEMENT PARAMETERS (for runtime verification):
+    annual_percentage_rate:  12.9
+    daily_periodic_rate:     0.00035342
+    minimum_payment_pct:     0.03
+    minimum_payment_floor:   15.00
+    grace_period_days:       25
+    late_fee:                25.00
+    returned_payment_fee:    25.00
+    over_credit_limit_fee:   10.00
+    card_replacement_fee:    5.00
+    document_copy_fee:       2.00
+    foreign_transaction_pct: 0.01
+    interest_method:         average_daily_balance_including_current_transactions
+    payment_waterfall_minimum: [collection_costs, interest_and_fees, principal]
+    payment_waterfall_excess:  highest_rate_first
+
+  SCENARIO SUMMARY (6 billing cycles):
+    Cycle 1 (Jan): First use, grace period, no interest
+    Cycle 2 (Feb): Paid in full, grace period continues
+    Cycle 3 (Mar): Minimum payment only, cash advance, grace period lost
+    Cycle 4 (Apr): Late payment, late fee assessed
+    Cycle 5 (May): Larger payment toward paydown, still no grace period
+    Cycle 6 (Jun): Pays in full, interest on residual ADB, grace period restored next cycle
+  ============================================================
+-->
+
+
+<!-- ==================== STATEMENT 1: JANUARY 2026 ==================== -->
+<div class="statement" id="stmt-2026-01">
+  <div class="header">
+    <h1>WesTex Community Credit Union</h1>
+    <h2>VISA&reg; Platinum Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>Maria R. Chen</strong><br>
+        1420 Pecan Valley Drive<br>
+        Kermit, TX 79745
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4256-XXXX-XXXX-8901<br>
+        Statement Date: January 31, 2026<br>
+        Credit Limit: $3,000.00<br>
+        Available Credit: $2,502.52
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: WesTex Community Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 12.9% | APR for Cash Advances: 12.9% | Daily Periodic Rate: 0.035342%
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$497.48</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box" style="background:#003366; color:#fff;">
+      <div class="label" style="color:#aaccee;">New Balance</div>
+      <div class="value">$497.48</div>
+    </div>
+  </div>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>01/05</td><td>01/05</td><td>TARGET SUPERCENTER #2847 KERMIT TX</td><td>Purchase</td><td class="amt">$127.43</td></tr>
+      <tr><td>01/12</td><td>01/12</td><td>SHELL OIL 57442187 KERMIT TX</td><td>Purchase</td><td class="amt">$45.88</td></tr>
+      <tr><td>01/18</td><td>01/18</td><td>AMAZON.COM AMZN.COM/BILL WA</td><td>Purchase</td><td class="amt">$234.50</td></tr>
+      <tr><td>01/25</td><td>01/25</td><td>H-E-B GROCERY #0491 KERMIT TX</td><td>Purchase</td><td class="amt">$89.67</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$497.48</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$0.00</td><td class="amt">31</td><td class="amt">$0.00</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$0.00</td><td class="amt">31</td><td class="amt">$0.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$0.00</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period in effect: YES (no previous balance). New purchases have at least 25 days before interest accrues.
+    </p>
+  </div>
+
+  <div class="section-label">Average Daily Balance Detail</div>
+  <div class="adb-detail">
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>01/01 - 01/04</td><td class="amt">4</td><td class="amt">$0.00</td><td class="amt">$0.00</td><td>Opening balance</td></tr>
+        <tr><td>01/05 - 01/11</td><td class="amt">7</td><td class="amt">$127.43</td><td class="amt">$892.01</td><td>+Purchase $127.43</td></tr>
+        <tr><td>01/12 - 01/17</td><td class="amt">6</td><td class="amt">$173.31</td><td class="amt">$1,039.86</td><td>+Purchase $45.88</td></tr>
+        <tr><td>01/18 - 01/24</td><td class="amt">7</td><td class="amt">$407.81</td><td class="amt">$2,854.67</td><td>+Purchase $234.50</td></tr>
+        <tr><td>01/25 - 01/31</td><td class="amt">7</td><td class="amt">$497.48</td><td class="amt">$3,482.36</td><td>+Purchase $89.67</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">31</td><td></td><td class="amt">$8,268.90</td><td></td></tr>
+        <tr><td colspan="3"><strong>Average Daily Balance</strong></td><td class="amt"><strong>$266.74</strong></td><td>(not applied - grace period in effect)</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$497.48</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$15.00</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>02/25/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(3% &times; $497.48, $15.00) = max($14.92, $15.00) = <strong>$15.00</strong><br>
+      Mail payments to: WesTex Community Credit Union, 200 East Austin, Kermit, TX 79745
+    </p>
+  </div>
+  <div class="meta">Statement 1 of 6 | Billing Cycle: 01/01/2026 - 01/31/2026 | 31 days</div>
+</div>
+
+
+<!-- ==================== STATEMENT 2: FEBRUARY 2026 ==================== -->
+<div class="statement" id="stmt-2026-02">
+  <div class="header">
+    <h1>WesTex Community Credit Union</h1>
+    <h2>VISA&reg; Platinum Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>Maria R. Chen</strong><br>
+        1420 Pecan Valley Drive<br>
+        Kermit, TX 79745
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4256-XXXX-XXXX-8901<br>
+        Statement Date: February 28, 2026<br>
+        Credit Limit: $3,000.00<br>
+        Available Credit: $2,690.94
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: WesTex Community Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 12.9% | APR for Cash Advances: 12.9% | Daily Periodic Rate: 0.035342%
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$497.48</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">-$497.48</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$309.06</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box" style="background:#003366; color:#fff;">
+      <div class="label" style="color:#aaccee;">New Balance</div>
+      <div class="value">$309.06</div>
+    </div>
+  </div>
+
+  <div class="section-label">Payments &amp; Credits</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="negative"><td>02/20</td><td>02/20</td><td>PAYMENT RECEIVED - THANK YOU</td><td>Payment</td><td class="amt">-$497.48</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>02/03</td><td>02/03</td><td>WALMART SUPERCENTER #3901 KERMIT TX</td><td>Purchase</td><td class="amt">$63.22</td></tr>
+      <tr><td>02/08</td><td>02/08</td><td>NETFLIX.COM LOS GATOS CA</td><td>Purchase</td><td class="amt">$15.99</td></tr>
+      <tr><td>02/14</td><td>02/14</td><td>OLIVE GARDEN #1822 ODESSA TX</td><td>Purchase</td><td class="amt">$87.50</td></tr>
+      <tr><td>02/22</td><td>02/22</td><td>AUTOZONE #4417 KERMIT TX</td><td>Purchase</td><td class="amt">$142.35</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$309.06</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$0.00</td><td class="amt">28</td><td class="amt">$0.00</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$0.00</td><td class="amt">28</td><td class="amt">$0.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$0.00</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period in effect: YES (previous balance paid in full by due date 02/25/2026; payment of $497.48 received 02/20/2026).
+      New purchases have at least 25 days before interest accrues.
+    </p>
+  </div>
+
+  <div class="section-label">Average Daily Balance Detail</div>
+  <div class="adb-detail">
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>02/01 - 02/02</td><td class="amt">2</td><td class="amt">$497.48</td><td class="amt">$994.96</td><td>Previous balance carried</td></tr>
+        <tr><td>02/03 - 02/07</td><td class="amt">5</td><td class="amt">$560.70</td><td class="amt">$2,803.50</td><td>+Purchase $63.22</td></tr>
+        <tr><td>02/08 - 02/13</td><td class="amt">6</td><td class="amt">$576.69</td><td class="amt">$3,460.14</td><td>+Purchase $15.99</td></tr>
+        <tr><td>02/14 - 02/19</td><td class="amt">6</td><td class="amt">$664.19</td><td class="amt">$3,985.14</td><td>+Purchase $87.50</td></tr>
+        <tr><td>02/20 - 02/21</td><td class="amt">2</td><td class="amt">$166.71</td><td class="amt">$333.42</td><td>-Payment $497.48</td></tr>
+        <tr><td>02/22 - 02/28</td><td class="amt">7</td><td class="amt">$309.06</td><td class="amt">$2,163.42</td><td>+Purchase $142.35</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">28</td><td></td><td class="amt">$13,740.58</td><td></td></tr>
+        <tr><td colspan="3"><strong>Average Daily Balance</strong></td><td class="amt"><strong>$490.74</strong></td><td>(not applied - grace period in effect)</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$309.06</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$15.00</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>03/25/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(3% &times; $309.06, $15.00) = max($9.27, $15.00) = <strong>$15.00</strong><br>
+      Mail payments to: WesTex Community Credit Union, 200 East Austin, Kermit, TX 79745
+    </p>
+  </div>
+  <div class="meta">Statement 2 of 6 | Billing Cycle: 02/01/2026 - 02/28/2026 | 28 days</div>
+</div>
+
+
+<!-- ==================== STATEMENT 3: MARCH 2026 ==================== -->
+<!--
+  KEY SCENARIO: Minimum payment only ($15.00). Grace period LOST.
+  Cash advance of $200.00 on 03/10 (interest from posting date).
+  Interest now charged on all balances using ADB method.
+
+  ADB Calculation:
+    03/01-03/02:  $309.06 x 2  = $618.12
+    03/03-03/09:  $524.94 x 7  = $3,674.58   (+Purchase $215.88)
+    03/10-03/17:  $724.94 x 8  = $5,799.52   (+Cash Advance $200.00)
+    03/18-03/19:  $709.94 x 2  = $1,419.88   (-Payment $15.00)
+    03/20-03/31:  $888.39 x 12 = $10,660.68  (+Purchase $178.45)
+    Sum = $22,172.78 / 31 days = $715.25
+    Interest = $715.25 x 0.00035342 x 31 = $7.84
+-->
+<div class="statement" id="stmt-2026-03">
+  <div class="header">
+    <h1>WesTex Community Credit Union</h1>
+    <h2>VISA&reg; Platinum Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>Maria R. Chen</strong><br>
+        1420 Pecan Valley Drive<br>
+        Kermit, TX 79745
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4256-XXXX-XXXX-8901<br>
+        Statement Date: March 31, 2026<br>
+        Credit Limit: $3,000.00<br>
+        Available Credit: $2,103.77
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: WesTex Community Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 12.9% | APR for Cash Advances: 12.9% | Daily Periodic Rate: 0.035342%
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$309.06</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">-$15.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$394.33</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$200.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$7.84</div>
+    </div>
+    <div class="box" style="background:#003366; color:#fff;">
+      <div class="label" style="color:#aaccee;">New Balance</div>
+      <div class="value">$896.23</div>
+    </div>
+  </div>
+
+  <div class="section-label">Payments &amp; Credits</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="negative"><td>03/18</td><td>03/18</td><td>PAYMENT RECEIVED - THANK YOU</td><td>Payment</td><td class="amt">-$15.00</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>03/03</td><td>03/03</td><td>LOWES HOME IMPROV #2210 ODESSA TX</td><td>Purchase</td><td class="amt">$215.88</td></tr>
+      <tr><td>03/10</td><td>03/10</td><td>ATM CASH ADVANCE - WESTEX CU KERMIT TX</td><td>Cash Advance</td><td class="amt">$200.00</td></tr>
+      <tr><td>03/20</td><td>03/20</td><td>COSTCO WHSE #0847 ODESSA TX</td><td>Purchase</td><td class="amt">$178.45</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$394.33</td></tr>
+      <tr class="total-row"><td colspan="4">Total Cash Advances</td><td class="amt">$200.00</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$715.25</td><td class="amt">31</td><td class="amt">$7.84</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$0.00</td><td class="amt">31</td><td class="amt">$0.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$7.84</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period in effect: NO. Previous balance of $309.06 was NOT paid in full by due date 03/25/2026
+      (only minimum payment of $15.00 received 03/18/2026). Interest charged on all balances including new purchases
+      from posting date. Cash advances accrue interest from posting date regardless of grace period status.<br>
+      <strong>Note:</strong> Single APR of 12.9% applies to both purchases and cash advances per agreement. ADB computed on combined balance.
+    </p>
+  </div>
+
+  <div class="section-label">Average Daily Balance Detail</div>
+  <div class="adb-detail">
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>03/01 - 03/02</td><td class="amt">2</td><td class="amt">$309.06</td><td class="amt">$618.12</td><td>Previous balance carried</td></tr>
+        <tr><td>03/03 - 03/09</td><td class="amt">7</td><td class="amt">$524.94</td><td class="amt">$3,674.58</td><td>+Purchase $215.88</td></tr>
+        <tr><td>03/10 - 03/17</td><td class="amt">8</td><td class="amt">$724.94</td><td class="amt">$5,799.52</td><td>+Cash Advance $200.00</td></tr>
+        <tr><td>03/18 - 03/19</td><td class="amt">2</td><td class="amt">$709.94</td><td class="amt">$1,419.88</td><td>-Payment $15.00</td></tr>
+        <tr><td>03/20 - 03/31</td><td class="amt">12</td><td class="amt">$888.39</td><td class="amt">$10,660.68</td><td>+Purchase $178.45</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">31</td><td></td><td class="amt">$22,172.78</td><td></td></tr>
+        <tr><td colspan="3"><strong>Average Daily Balance</strong></td><td class="amt"><strong>$715.25</strong></td><td></td></tr>
+        <tr><td colspan="3"><strong>Interest</strong></td><td class="amt"><strong>$7.84</strong></td><td>= $715.25 &times; 0.00035342 &times; 31</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$896.23</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$26.89</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>04/25/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(3% &times; $896.23, $15.00) = max($26.89, $15.00) = <strong>$26.89</strong><br>
+      Mail payments to: WesTex Community Credit Union, 200 East Austin, Kermit, TX 79745
+    </p>
+  </div>
+  <div class="meta">Statement 3 of 6 | Billing Cycle: 03/01/2026 - 03/31/2026 | 31 days</div>
+</div>
+
+
+<!-- ==================== STATEMENT 4: APRIL 2026 ==================== -->
+<!--
+  KEY SCENARIO: LATE PAYMENT. Payment of $26.89 received 04/28, three days
+  past due date of 04/25. Late fee of $25.00 assessed on 04/26.
+
+  ADB Calculation:
+    04/01-04/04:  $896.23  x 4  = $3,584.92
+    04/05-04/14:  $1,246.22 x 10 = $12,462.20   (+Purchase $349.99)
+    04/15-04/25:  $1,298.62 x 11 = $14,284.82   (+Purchase $52.40)
+    04/26-04/27:  $1,323.62 x 2  = $2,647.24    (+Late Fee $25.00)
+    04/28-04/30:  $1,296.73 x 3  = $3,890.19    (-Payment $26.89)
+    Sum = $36,869.37 / 30 days = $1,228.98
+    Interest = $1,228.98 x 0.00035342 x 30 = $13.03
+-->
+<div class="statement" id="stmt-2026-04">
+  <div class="header">
+    <h1>WesTex Community Credit Union</h1>
+    <h2>VISA&reg; Platinum Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>Maria R. Chen</strong><br>
+        1420 Pecan Valley Drive<br>
+        Kermit, TX 79745
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4256-XXXX-XXXX-8901<br>
+        Statement Date: April 30, 2026<br>
+        Credit Limit: $3,000.00<br>
+        Available Credit: $1,690.24
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: WesTex Community Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 12.9% | APR for Cash Advances: 12.9% | Daily Periodic Rate: 0.035342%
+  </div>
+
+  <div class="warning">
+    <strong>LATE PAYMENT NOTICE:</strong> Your minimum payment of $26.89 due 04/25/2026 was received on 04/28/2026.
+    A late payment fee of $25.00 has been assessed to your account. Please ensure future payments arrive by the due date.
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$896.23</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">-$26.89</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$402.39</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$25.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$13.03</div>
+    </div>
+    <div class="box" style="background:#003366; color:#fff;">
+      <div class="label" style="color:#aaccee;">New Balance</div>
+      <div class="value">$1,309.76</div>
+    </div>
+  </div>
+
+  <div class="section-label">Payments &amp; Credits</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="negative"><td>04/28</td><td>04/28</td><td>PAYMENT RECEIVED - THANK YOU</td><td>Payment</td><td class="amt">-$26.89</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>04/05</td><td>04/05</td><td>BEST BUY #00762 MIDLAND TX</td><td>Purchase</td><td class="amt">$349.99</td></tr>
+      <tr><td>04/15</td><td>04/15</td><td>CHILIS GRILL BAR #1190 KERMIT TX</td><td>Purchase</td><td class="amt">$52.40</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$402.39</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Fees</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Description</th><th>Reference</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="fee-row"><td>04/26</td><td>LATE PAYMENT FEE</td><td>Agreement Clause 7 - Late Payment Fee</td><td class="amt">$25.00</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="3">Total Fees</td><td class="amt">$25.00</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$1,228.98</td><td class="amt">30</td><td class="amt">$13.03</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$0.00</td><td class="amt">30</td><td class="amt">$0.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$13.03</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period in effect: NO. Previous balance NOT paid in full. Interest charged on all balances including new purchases and fees from posting date.
+    </p>
+  </div>
+
+  <div class="section-label">Average Daily Balance Detail</div>
+  <div class="adb-detail">
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>04/01 - 04/04</td><td class="amt">4</td><td class="amt">$896.23</td><td class="amt">$3,584.92</td><td>Previous balance carried</td></tr>
+        <tr><td>04/05 - 04/14</td><td class="amt">10</td><td class="amt">$1,246.22</td><td class="amt">$12,462.20</td><td>+Purchase $349.99</td></tr>
+        <tr><td>04/15 - 04/25</td><td class="amt">11</td><td class="amt">$1,298.62</td><td class="amt">$14,284.82</td><td>+Purchase $52.40</td></tr>
+        <tr><td>04/26 - 04/27</td><td class="amt">2</td><td class="amt">$1,323.62</td><td class="amt">$2,647.24</td><td>+Late Fee $25.00</td></tr>
+        <tr><td>04/28 - 04/30</td><td class="amt">3</td><td class="amt">$1,296.73</td><td class="amt">$3,890.19</td><td>-Payment $26.89</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">30</td><td></td><td class="amt">$36,869.37</td><td></td></tr>
+        <tr><td colspan="3"><strong>Average Daily Balance</strong></td><td class="amt"><strong>$1,228.98</strong></td><td></td></tr>
+        <tr><td colspan="3"><strong>Interest</strong></td><td class="amt"><strong>$13.03</strong></td><td>= $1,228.98 &times; 0.00035342 &times; 30</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="section-label">Payment Application (Clause 10)</div>
+  <div class="adb-detail">
+    <table>
+      <thead>
+        <tr><th>Payment Component</th><th class="amt">Amount</th><th>Applied To</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1. Collection Costs</td><td class="amt">$0.00</td><td>No collection costs outstanding</td></tr>
+        <tr><td>2. Interest Charges &amp; Fees</td><td class="amt">$26.89</td><td>Applied to accrued interest and late fee</td></tr>
+        <tr><td>3. Principal</td><td class="amt">$0.00</td><td>Entire minimum payment absorbed by interest/fees</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total Payment Applied</td><td class="amt">$26.89</td><td>(minimum payment only)</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$1,309.76</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$39.29</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>05/25/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(3% &times; $1,309.76, $15.00) = max($39.29, $15.00) = <strong>$39.29</strong><br>
+      Mail payments to: WesTex Community Credit Union, 200 East Austin, Kermit, TX 79745
+    </p>
+  </div>
+  <div class="meta">Statement 4 of 6 | Billing Cycle: 04/01/2026 - 04/30/2026 | 30 days</div>
+</div>
+
+
+<!-- ==================== STATEMENT 5: MAY 2026 ==================== -->
+<!--
+  KEY SCENARIO: Larger payment of $200.00 (above minimum of $39.29).
+  Payment applied per Clause 10: minimum to interest/fees/principal,
+  excess ($160.71) to highest-rate balance.
+
+  ADB Calculation:
+    05/01-05/05:  $1,309.76 x 5  = $6,548.80
+    05/06-05/11:  $1,386.09 x 6  = $8,316.54   (+Purchase $76.33)
+    05/12-05/14:  $1,186.09 x 3  = $3,558.27   (-Payment $200.00)
+    05/15-05/31:  $1,238.19 x 17 = $21,049.23  (+Purchase $52.10)
+    Sum = $39,472.84 / 31 days = $1,273.32
+    Interest = $1,273.32 x 0.00035342 x 31 = $13.95
+-->
+<div class="statement" id="stmt-2026-05">
+  <div class="header">
+    <h1>WesTex Community Credit Union</h1>
+    <h2>VISA&reg; Platinum Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>Maria R. Chen</strong><br>
+        1420 Pecan Valley Drive<br>
+        Kermit, TX 79745
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4256-XXXX-XXXX-8901<br>
+        Statement Date: May 31, 2026<br>
+        Credit Limit: $3,000.00<br>
+        Available Credit: $1,747.86
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: WesTex Community Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 12.9% | APR for Cash Advances: 12.9% | Daily Periodic Rate: 0.035342%
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$1,309.76</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">-$200.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$128.43</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$13.95</div>
+    </div>
+    <div class="box" style="background:#003366; color:#fff;">
+      <div class="label" style="color:#aaccee;">New Balance</div>
+      <div class="value">$1,252.14</div>
+    </div>
+  </div>
+
+  <div class="section-label">Payments &amp; Credits</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="negative"><td>05/12</td><td>05/12</td><td>PAYMENT RECEIVED - THANK YOU</td><td>Payment</td><td class="amt">-$200.00</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>05/06</td><td>05/06</td><td>WALMART SUPERCENTER #3901 KERMIT TX</td><td>Purchase</td><td class="amt">$76.33</td></tr>
+      <tr><td>05/15</td><td>05/15</td><td>SHELL OIL 57442187 KERMIT TX</td><td>Purchase</td><td class="amt">$52.10</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$128.43</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$1,273.32</td><td class="amt">31</td><td class="amt">$13.95</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$0.00</td><td class="amt">31</td><td class="amt">$0.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$13.95</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period in effect: NO. Previous balance NOT paid in full.
+    </p>
+  </div>
+
+  <div class="section-label">Average Daily Balance Detail</div>
+  <div class="adb-detail">
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>05/01 - 05/05</td><td class="amt">5</td><td class="amt">$1,309.76</td><td class="amt">$6,548.80</td><td>Previous balance carried</td></tr>
+        <tr><td>05/06 - 05/11</td><td class="amt">6</td><td class="amt">$1,386.09</td><td class="amt">$8,316.54</td><td>+Purchase $76.33</td></tr>
+        <tr><td>05/12 - 05/14</td><td class="amt">3</td><td class="amt">$1,186.09</td><td class="amt">$3,558.27</td><td>-Payment $200.00</td></tr>
+        <tr><td>05/15 - 05/31</td><td class="amt">17</td><td class="amt">$1,238.19</td><td class="amt">$21,049.23</td><td>+Purchase $52.10</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">31</td><td></td><td class="amt">$39,472.84</td><td></td></tr>
+        <tr><td colspan="3"><strong>Average Daily Balance</strong></td><td class="amt"><strong>$1,273.32</strong></td><td></td></tr>
+        <tr><td colspan="3"><strong>Interest</strong></td><td class="amt"><strong>$13.95</strong></td><td>= $1,273.32 &times; 0.00035342 &times; 31</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="section-label">Payment Application (Clause 10)</div>
+  <div class="adb-detail">
+    <table>
+      <thead>
+        <tr><th>Payment Component</th><th class="amt">Amount</th><th>Applied To</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Minimum Payment ($39.29)</td><td class="amt">$39.29</td><td></td></tr>
+        <tr><td>&nbsp;&nbsp;1. Collection Costs</td><td class="amt">$0.00</td><td>None outstanding</td></tr>
+        <tr><td>&nbsp;&nbsp;2. Interest Charges &amp; Fees</td><td class="amt">$13.03</td><td>Prior cycle accrued interest</td></tr>
+        <tr><td>&nbsp;&nbsp;3. Principal</td><td class="amt">$26.26</td><td>Applied to principal balance</td></tr>
+        <tr><td>Excess Above Minimum</td><td class="amt">$160.71</td><td>Applied to highest-rate balance (single rate: principal)</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total Payment Applied</td><td class="amt">$200.00</td><td></td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$1,252.14</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$37.56</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>06/25/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(3% &times; $1,252.14, $15.00) = max($37.56, $15.00) = <strong>$37.56</strong><br>
+      Mail payments to: WesTex Community Credit Union, 200 East Austin, Kermit, TX 79745
+    </p>
+  </div>
+  <div class="meta">Statement 5 of 6 | Billing Cycle: 05/01/2026 - 05/31/2026 | 31 days</div>
+</div>
+
+
+<!-- ==================== STATEMENT 6: JUNE 2026 ==================== -->
+<!--
+  KEY SCENARIO: Pays balance in full ($1,252.14 on 06/08). Grace period
+  will be RESTORED for cycle 7. However, THIS cycle still has no grace period
+  because cycle 5 was not paid in full. Interest accrues on residual ADB.
+
+  ADB Calculation:
+    06/01-06/07:  $1,252.14 x 7  = $8,764.98
+    06/08-06/14:  $0.00     x 7  = $0.00       (-Payment $1,252.14)
+    06/15-06/21:  $89.99    x 7  = $629.93     (+Purchase $89.99)
+    06/22-06/30:  $157.49   x 9  = $1,417.41   (+Purchase $67.50)
+    Sum = $10,812.32 / 30 days = $360.41
+    Interest = $360.41 x 0.00035342 x 30 = $3.82
+-->
+<div class="statement" id="stmt-2026-06">
+  <div class="header">
+    <h1>WesTex Community Credit Union</h1>
+    <h2>VISA&reg; Platinum Credit Card - Monthly Statement</h2>
+    <div class="account-info">
+      <div>
+        <strong>Maria R. Chen</strong><br>
+        1420 Pecan Valley Drive<br>
+        Kermit, TX 79745
+      </div>
+      <div style="text-align:right;">
+        Account Number: 4256-XXXX-XXXX-8901<br>
+        Statement Date: June 30, 2026<br>
+        Credit Limit: $3,000.00<br>
+        Available Credit: $2,838.69
+      </div>
+    </div>
+  </div>
+
+  <div class="agreement-ref">
+    Governing Agreement: WesTex Community Credit Union VISA Credit Card Agreement<br>
+    APR for Purchases: 12.9% | APR for Cash Advances: 12.9% | Daily Periodic Rate: 0.035342%
+  </div>
+
+  <div class="summary-box">
+    <div class="box">
+      <div class="label">Previous Balance</div>
+      <div class="value">$1,252.14</div>
+    </div>
+    <div class="box">
+      <div class="label">Payments &amp; Credits</div>
+      <div class="value negative">-$1,252.14</div>
+    </div>
+    <div class="box">
+      <div class="label">Purchases</div>
+      <div class="value">$157.49</div>
+    </div>
+    <div class="box">
+      <div class="label">Cash Advances</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Fees</div>
+      <div class="value">$0.00</div>
+    </div>
+    <div class="box">
+      <div class="label">Interest Charged</div>
+      <div class="value">$3.82</div>
+    </div>
+    <div class="box" style="background:#003366; color:#fff;">
+      <div class="label" style="color:#aaccee;">New Balance</div>
+      <div class="value">$161.31</div>
+    </div>
+  </div>
+
+  <div class="section-label">Payments &amp; Credits</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr class="negative"><td>06/08</td><td>06/08</td><td>PAYMENT RECEIVED - THANK YOU</td><td>Payment</td><td class="amt">-$1,252.14</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Transactions</div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Post Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>06/15</td><td>06/15</td><td>AMAZON.COM AMZN.COM/BILL WA</td><td>Purchase</td><td class="amt">$89.99</td></tr>
+      <tr><td>06/22</td><td>06/22</td><td>H-E-B GROCERY #0491 KERMIT TX</td><td>Purchase</td><td class="amt">$67.50</td></tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row"><td colspan="4">Total Purchases</td><td class="amt">$157.49</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="section-label">Interest Charge Calculation</div>
+  <div class="interest-detail">
+    <table>
+      <thead>
+        <tr><th>Balance Type</th><th class="amt">Daily Periodic Rate</th><th class="amt">APR</th><th class="amt">Balance Subject to Interest</th><th class="amt">Days in Cycle</th><th class="amt">Interest Charge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Purchases</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$360.41</td><td class="amt">30</td><td class="amt">$3.82</td></tr>
+        <tr><td>Cash Advances</td><td class="amt">0.035342%</td><td class="amt">12.90%</td><td class="amt">$0.00</td><td class="amt">30</td><td class="amt">$0.00</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td colspan="5">Total Interest Charged</td><td class="amt">$3.82</td></tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px; margin-top:4px; color:#555;">
+      Grace period in effect: NO (for this cycle). Previous cycle balance was NOT paid in full by due date 06/25/2026.
+      Interest charged on residual average daily balance.<br>
+      <strong>Note:</strong> Full payment of $1,252.14 received 06/08/2026 RESTORES grace period for NEXT billing cycle (July).
+      If new balance of $161.31 is paid in full by 07/25/2026, no interest will accrue on July purchases.
+    </p>
+  </div>
+
+  <div class="section-label">Average Daily Balance Detail</div>
+  <div class="adb-detail">
+    <table>
+      <thead>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Subtotal</th><th>Activity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>06/01 - 06/07</td><td class="amt">7</td><td class="amt">$1,252.14</td><td class="amt">$8,764.98</td><td>Previous balance carried</td></tr>
+        <tr><td>06/08 - 06/14</td><td class="amt">7</td><td class="amt">$0.00</td><td class="amt">$0.00</td><td>-Payment $1,252.14 (full payoff)</td></tr>
+        <tr><td>06/15 - 06/21</td><td class="amt">7</td><td class="amt">$89.99</td><td class="amt">$629.93</td><td>+Purchase $89.99</td></tr>
+        <tr><td>06/22 - 06/30</td><td class="amt">9</td><td class="amt">$157.49</td><td class="amt">$1,417.41</td><td>+Purchase $67.50</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row"><td>Total</td><td class="amt">30</td><td></td><td class="amt">$10,812.32</td><td></td></tr>
+        <tr><td colspan="3"><strong>Average Daily Balance</strong></td><td class="amt"><strong>$360.41</strong></td><td></td></tr>
+        <tr><td colspan="3"><strong>Interest</strong></td><td class="amt"><strong>$3.82</strong></td><td>= $360.41 &times; 0.00035342 &times; 30</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="payment-stub">
+    <h3>Payment Information</h3>
+    <table>
+      <tr><td>New Balance</td><td class="amt"><strong>$161.31</strong></td></tr>
+      <tr><td>Minimum Payment Due</td><td class="amt"><strong>$15.00</strong></td></tr>
+      <tr><td>Payment Due Date</td><td class="amt"><strong>07/25/2026</strong></td></tr>
+    </table>
+    <p style="font-size:10px; margin-top:6px;">
+      Minimum payment = max(3% &times; $161.31, $15.00) = max($4.84, $15.00) = <strong>$15.00</strong><br>
+      Mail payments to: WesTex Community Credit Union, 200 East Austin, Kermit, TX 79745<br>
+      <strong>Tip:</strong> Pay the full $161.31 by 07/25/2026 to restore your interest-free grace period on new purchases.
+    </p>
+  </div>
+  <div class="meta">Statement 6 of 6 | Billing Cycle: 06/01/2026 - 06/30/2026 | 30 days</div>
+</div>
+
+
+<!--
+  ============================================================
+  VERIFICATION SUMMARY (for runtime cross-check)
+  ============================================================
+  Cycle | Prev Bal   | Payments   | Purchases | CA      | Fees   | Interest | New Bal    | Min Due | Grace?
+  1     | $0.00      | $0.00      | $497.48   | $0.00   | $0.00  | $0.00    | $497.48    | $15.00  | YES
+  2     | $497.48    | $497.48    | $309.06   | $0.00   | $0.00  | $0.00    | $309.06    | $15.00  | YES
+  3     | $309.06    | $15.00     | $394.33   | $200.00 | $0.00  | $7.84    | $896.23    | $26.89  | NO
+  4     | $896.23    | $26.89     | $402.39   | $0.00   | $25.00 | $13.03   | $1,309.76  | $39.29  | NO
+  5     | $1,309.76  | $200.00    | $128.43   | $0.00   | $0.00  | $13.95   | $1,252.14  | $37.56  | NO
+  6     | $1,252.14  | $1,252.14  | $157.49   | $0.00   | $0.00  | $3.82    | $161.31    | $15.00  | NO
+
+  Total interest paid across 6 cycles: $38.64
+  Total fees paid across 6 cycles: $25.00
+  ============================================================
+-->
+
+</body>
+</html>

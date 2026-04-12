@@ -1,0 +1,24 @@
+[
+  {"type": "AccountOpened", "day": 1, "cardholder_name": "Jane Doe", "credit_limit": "5000", "apr_purchase": "10.9", "apr_cash_advance": "12.9", "card_product": "platinum"},
+
+  {"type": "Purchase", "day": 3, "amount": "2000.00", "merchant_name": "Furniture Store"},
+  {"type": "CashAdvanceATM", "day": 10, "amount": "500.00", "atm_operator_fee": "3.00"},
+  {"type": "CycleEnd", "day": 30},
+
+  {"type": "Purchase", "day": 35, "amount": "300.00", "merchant_name": "Amazon"},
+  {"type": "PaymentReceived", "day": 50, "amount": "75.51"},
+  {"type": "CycleEnd", "day": 60},
+
+  {"type": "BillingErrorClaimed", "day": 75, "error_on_statement_day": 60, "amount": "300.00", "description": "Did not receive Amazon order", "method": "written"},
+  {"type": "PaymentReceived", "day": 80, "amount": "100.00"},
+  {"type": "CycleEnd", "day": 90},
+
+  {"type": "PaymentReceived", "day": 105, "amount": "50.00"},
+  {"type": "CycleEnd", "day": 120},
+
+  {"type": "Purchase", "day": 125, "amount": "150.00", "merchant_name": "Gas Station", "is_international": true},
+  {"type": "PaymentReceived", "day": 140, "amount": "80.00"},
+  {"type": "CycleEnd", "day": 150},
+
+  {"type": "CycleEnd", "day": 180}
+]

@@ -1,0 +1,237 @@
+{
+  "meta": {
+    "issuer_name": "WesTex Community Credit Union",
+    "issuer_address": "200 East Austin, Kermit, TX 79745",
+    "issuer_phone": "(877) 669-2382",
+    "card_services_address": "Card Services 7002 Fauna St., Houston, Texas 77061",
+    "network": "VISA",
+    "governing_law_state": "Texas",
+    "source_clause": "Preamble"
+  },
+
+  "products": [
+    {
+      "id": "platinum",
+      "name": "VISA Platinum",
+      "annual_fee": "0.00",
+      "apr_purchases": {"min": "7.9", "max": "15.9"},
+      "apr_cash_advances": {"min": "7.9", "max": "15.9"},
+      "apr_balance_transfers": {
+        "intro_rate": "0.0",
+        "intro_period_months": 6,
+        "post_intro": {"min": "7.9", "max": "10.9"}
+      },
+      "source_clause": "Credit Disclosure Table"
+    },
+    {
+      "id": "share_secured",
+      "name": "VISA Share Secured",
+      "annual_fee": "0.00",
+      "apr_purchases": {"min": "4.9", "max": "4.9"},
+      "apr_cash_advances": {"min": "4.9", "max": "4.9"},
+      "apr_balance_transfers": {
+        "intro_rate": null,
+        "intro_period_months": null,
+        "post_intro": {"min": "4.9", "max": "4.9"}
+      },
+      "source_clause": "Credit Disclosure Table"
+    }
+  ],
+
+  "interest": {
+    "method": "average_daily_balance_including_current",
+    "daily_periodic_rates": [
+      {"apr": "6.9",  "daily_rate": "0.00018904", "source_clause": "Section 6"},
+      {"apr": "8.9",  "daily_rate": "0.00024383", "source_clause": "Section 6"},
+      {"apr": "10.9", "daily_rate": "0.0002986",  "source_clause": "Section 6"},
+      {"apr": "12.9", "daily_rate": "0.0003534",  "source_clause": "Section 6"}
+    ],
+    "minimum_interest": "0.00",
+    "source_clause": "Section 6"
+  },
+
+  "grace_period": {
+    "purchases_days": 25,
+    "condition": "previous_balance_paid_in_full_by_due_date_or_no_previous_balance",
+    "cash_advances": "none",
+    "balance_transfers": "none",
+    "international_fee": "none",
+    "source_clause": "Section 6"
+  },
+
+  "minimum_payment": {
+    "percent_of_balance": "3.0",
+    "floor_amount": "15.00",
+    "pay_in_full_threshold": "15.00",
+    "source_clause": "Section 5"
+  },
+
+  "fees": {
+    "annual": "0.00",
+    "late_payment": {
+      "amount": "25.00",
+      "source_clause": "Section 7"
+    },
+    "returned_payment": {
+      "amount": "25.00",
+      "cap": "minimum_payment_for_period",
+      "source_clause": "Section 7"
+    },
+    "over_limit": {
+      "amount": "10.00",
+      "recurring": true,
+      "trigger": "new_balance_less_fees_exceeds_limit_on_statement_date",
+      "source_clause": "Section 7"
+    },
+    "card_replacement": {
+      "amount": "5.00",
+      "source_clause": "Section 7"
+    },
+    "document_copy": {
+      "amount": "2.00",
+      "waived_on_cu_billing_error": true,
+      "source_clause": "Section 7"
+    },
+    "foreign_transaction_pct": "1.0",
+    "foreign_transaction_note": "applies_to_all_international_even_without_currency_conversion",
+    "atm_operator_fee": "passthrough",
+    "atm_fee_treatment": "treated_as_purchase",
+    "convenience_check_copy": "2.00",
+    "convenience_check_stop_payment": "20.00",
+    "convenience_check_nsf": "25.00",
+    "source_clause": "Section 7, Section 14"
+  },
+
+  "payment_application": {
+    "minimum_payment_order": [
+      "collection_costs",
+      "interest_and_fees",
+      "principal_lowest_rate"
+    ],
+    "excess_payment_order": "highest_rate_first",
+    "source_clause": "Section 10"
+  },
+
+  "payment_crediting": {
+    "at_designated_address": "credited_on_date_of_receipt",
+    "non_business_day": "credited_next_business_day",
+    "other_location": "delayed_up_to_5_days",
+    "source_clause": "Section 10"
+  },
+
+  "security_interest": {
+    "scope": "all_individual_and_joint_accounts",
+    "exceptions": ["individual_retirement_account", "tax_advantaged_accounts"],
+    "source_clause": "SECURITY paragraph"
+  },
+
+  "liability": {
+    "unauthorized_use_cap": "50.00",
+    "visa_zero_liability": true,
+    "zero_liability_exceptions": ["gross_negligence", "fraud", "atm_cash_advance"],
+    "source_clause": "Section 9"
+  },
+
+  "default_triggers": [
+    {"code": "D1", "condition": "failed_to_make_payment_on_time", "source_clause": "Section 11"},
+    {"code": "D2", "condition": "breach_of_any_cu_agreement", "source_clause": "Section 11"},
+    {"code": "D3", "condition": "bankruptcy_or_insolvency", "source_clause": "Section 11"},
+    {"code": "D4", "condition": "garnishment_of_cu_held_funds", "source_clause": "Section 11"},
+    {"code": "D5", "condition": "false_application_information", "source_clause": "Section 11"},
+    {"code": "D6", "condition": "repayment_ability_endangered", "source_clause": "Section 11"}
+  ],
+
+  "default_consequences": {
+    "acceleration": true,
+    "notice_required": false,
+    "notice_waived_by_cardholder": true,
+    "card_surrender_on_demand": true,
+    "collection_costs": "actual_plus_attorney_fees_plus_court_costs",
+    "interest_continues_until_paid": true,
+    "source_clause": "Section 12"
+  },
+
+  "disputes": {
+    "billing_error": {
+      "filing_window_days": 60,
+      "filing_method": "written_required",
+      "oral_triggers_investigation": false,
+      "ack_deadline_days": 30,
+      "resolution_deadline_days": 90,
+      "cardholder_reject_window_days": 10,
+      "cu_failure_penalty": "50.00",
+      "during_investigation": {
+        "collectible": false,
+        "reportable_as_delinquent": false,
+        "interest_accrues": true,
+        "applied_against_credit_limit": true
+      },
+      "source_clause": "Billing Rights Section"
+    },
+    "purchase_dispute": {
+      "geographic_limit_same_state_or_miles": 100,
+      "minimum_purchase_amount": "50.00",
+      "geographic_exceptions": ["cu_mailed_advertisement", "cu_owns_merchant"],
+      "requires_card_used_directly": true,
+      "requires_not_fully_paid": true,
+      "requires_good_faith_merchant_attempt": true,
+      "source_clause": "Purchase Dispute Rights Section"
+    }
+  },
+
+  "joint_account": {
+    "liability_type": "joint_and_individual",
+    "each_is_agent_for_other": true,
+    "notice_to_one_is_notice_to_all": true,
+    "withdrawal_method": "written_notice",
+    "withdrawal_releases_existing_debt": false,
+    "source_clause": "Section 2"
+  },
+
+  "authorized_users": {
+    "cardholder_liable_for_all_charges": true,
+    "revocation_requires_written_notice": true,
+    "revocation_requires_card_returned": true,
+    "source_clause": "Section 3"
+  },
+
+  "termination": {
+    "cu_can_terminate": true,
+    "cu_requires_notice_per_law": true,
+    "cardholder_method": "written_notice",
+    "surviving_obligations": ["existing_balance", "interest", "fees", "collection_costs"],
+    "use_after_terms_change_notice_binds_existing_balance": true,
+    "source_clause": "Section 18"
+  },
+
+  "illegal_use": {
+    "cardholder_remains_liable": true,
+    "constitutes_default": true,
+    "cardholder_waives_legal_action_against_cu": true,
+    "cardholder_indemnifies_cu_and_visa": true,
+    "source_clause": "Section 1"
+  },
+
+  "billing_cycle_days": 30,
+  "payment_due_days_after_statement": 25,
+
+  "credit_insurance": {
+    "required": false,
+    "premium_added_to_balance": true,
+    "source_clause": "Section 8"
+  },
+
+  "international_transactions": {
+    "exchange_rate_source": "visa_wholesale_currency_market",
+    "foreign_transaction_fee_pct": "1.0",
+    "no_grace_period_on_fee": true,
+    "source_clause": "Section 16"
+  },
+
+  "credit_reporting": {
+    "frequency": "monthly",
+    "dispute_restriction": "cannot_report_delinquent_on_disputed_amount_during_investigation",
+    "notification_address": "WesTex Community Credit Union, Attn: Credit Department, 200 East Austin, Kermit, TX 79745",
+    "source_clause": "Section 20"
+  }
+}
