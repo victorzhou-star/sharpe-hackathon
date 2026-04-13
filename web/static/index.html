@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Card Agreement Engine</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>Credit Card Agreement Engine</h1>
+    <div class="nav">
+      <a href="#" onclick="showView('home')">Contracts</a>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- HOME VIEW -->
+  <div id="view-home">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2 style="font-size:16px;">Contract Instances</h2>
+      <div>
+        <button class="btn btn-sm btn-outline" onclick="showView('upload-ir')">Load IR (no LLM)</button>
+        <button class="btn btn-sm" onclick="showView('upload')">+ New Contract</button>
+      </div>
+    </div>
+    <div id="contract-list"><div class="loading"><span class="spinner"></span> Loading...</div></div>
+  </div>
+
+  <!-- UPLOAD CONTRACT VIEW -->
+  <div id="view-upload" class="hidden">
+    <div class="card">
+      <h2>Parse New Contract</h2>
+      <p class="dim" style="margin-bottom:12px;">Upload a credit card agreement (.md). The LLM will extract all terms into a structured IR.</p>
+      <div class="upload-area">
+        <div>Drop contract file here or click to browse</div>
+        <input type="file" id="contract-file" accept=".md,.txt">
+      </div>
+      <button class="btn" id="btn-parse" onclick="parseContract()">Parse Contract</button>
+      <span id="parse-status"></span>
+    </div>
+  </div>
+
+  <!-- UPLOAD IR VIEW -->
+  <div id="view-upload-ir" class="hidden">
+    <div class="card">
+      <h2>Load Existing IR</h2>
+      <p class="dim" style="margin-bottom:12px;">Upload a previously generated IR (.json). No LLM call needed.</p>
+      <div class="upload-area">
+        <input type="file" id="ir-file" accept=".json">
+      </div>
+      <button class="btn" onclick="loadIR()">Load IR</button>
+      <span id="ir-status"></span>
+    </div>
+  </div>
+
+  <!-- CONTRACT DETAIL VIEW -->
+  <div id="view-contract" class="hidden">
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 id="contract-title">Contract</h2>
+        <div>
+          <button class="btn btn-sm btn-outline" id="btn-tab-ir" onclick="showContractTab('ir')" style="font-weight:700;">Structured IR</button>
+          <button class="btn btn-sm btn-outline" id="btn-tab-english" onclick="showContractTab('english')">Full English</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteContract()" style="margin-left:12px;">Delete</button>
+        </div>
+      </div>
+      <div id="contract-tab-ir"></div>
+      <div id="contract-tab-english" class="hidden" style="white-space:pre-wrap; font-size:12px; line-height:1.6; max-height:600px; overflow-y:auto; padding:12px; background:#fafafa; border:1px solid #eee; margin-top:12px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>Analyze Statements</h2>
+      <div class="upload-area">
+        <div>Upload statement history (.html)</div>
+        <input type="file" id="stmt-file" accept=".html">
+      </div>
+      <button class="btn" onclick="runAnalysis()">Run Analysis</button>
+      <span id="analysis-status"></span>
+    </div>
+
+    <div id="past-analyses"></div>
+  </div>
+
+  <!-- ANALYSIS VIEW -->
+  <div id="view-analysis" class="hidden">
+    <div style="margin-bottom:12px;">
+      <a href="#" onclick="showContract(currentInstanceId)" style="color:#003366;">&larr; Back to contract</a>
+    </div>
+
+    <div class="card">
+      <h2 id="analysis-title">Analysis</h2>
+      <div id="analysis-summary"></div>
+    </div>
+
+    <div id="cycle-nav-bar"></div>
+    <div id="summary-table"></div>
+    <div id="cycle-detail"></div>
+  </div>
+
+</div>
+
+<script>
+// ===================================================================
+// State
+// ===================================================================
+let currentInstanceId = null;
+let currentAnalysis = null;
+let currentCycle = 0;
+
+// ===================================================================
+// Views
+// ===================================================================
+function showView(name) {
+  document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
+  document.getElementById('view-' + name).classList.remove('hidden');
+  if (name === 'home') loadContracts();
+}
+
+// ===================================================================
+// Contracts
+// ===================================================================
+async function loadContracts() {
+  const res = await fetch('/api/contracts');
+  const contracts = await res.json();
+  const el = document.getElementById('contract-list');
+
+  if (contracts.length === 0) {
+    el.innerHTML = '<div class="card dim" style="text-align:center;padding:40px;">No contracts yet. Click "+ New Contract" to get started.</div>';
+    return;
+  }
+
+  el.innerHTML = contracts.map(c => `
+    <div class="card" style="cursor:pointer;" onclick="showContract('${c.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <strong>${c.issuer || c.filename}</strong>
+          <span class="dim" style="margin-left:8px;">${c.network || ''}</span>
+        </div>
+        <div class="dim">${c.created ? c.created.slice(0, 10) : ''}</div>
+      </div>
+      <div style="margin-top:8px; display:flex; gap:24px; font-size:12px; color:#555;">
+        <span>APR: ${c.apr_range || 'N/A'}</span>
+        <span>Grace: ${c.grace_days || 'N/A'} days</span>
+        <span>Late Fee: ${c.late_fee || 'N/A'}</span>
+        <span>Min Payment: ${c.min_payment || 'N/A'}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function showContract(id) {
+  currentInstanceId = id;
+  const res = await fetch(`/api/contracts/${id}`);
+  const data = await res.json();
+
+  document.getElementById('contract-title').textContent = data.meta.issuer || data.meta.filename;
+
+  const ir = data.ir;
+  let terms = '';
+
+  // Helper
+  const sec = (title, rows) => {
+    let h = `<h3 style="margin-top:16px;color:#003366;font-size:13px;border-bottom:1px solid #ddd;padding-bottom:4px;">${title}</h3>`;
+    h += rows.map(([k,v]) => `<div class="meta-row"><span class="label">${k}</span><span class="value">${v || 'N/A'}</span></div>`).join('');
+    return h;
+  };
+  const fval = (obj, key) => {
+    if (!obj) return 'N/A';
+    const v = obj[key];
+    if (v === null || v === undefined) return 'N/A';
+    return typeof v === 'object' ? (v.amount || JSON.stringify(v)) : v;
+  };
+
+  // Agreement
+  terms += sec('Agreement', [
+    ['Issuer', ir.meta?.issuer_name],
+    ['Address', ir.meta?.issuer_address],
+    ['Network', ir.meta?.network],
+    ['Governing Law', ir.meta?.governing_law_state],
+  ]);
+
+  // Products
+  const products = ir.products || [];
+  if (products.length) {
+    let prodRows = [];
+    products.forEach(p => {
+      const apr_p = p.apr_purchases || {};
+      const apr_ca = p.apr_cash_advances || {};
+      const apr_bt = p.apr_balance_transfers || {};
+      prodRows.push([p.name, `Purchase: ${apr_p.min||'?'}%-${apr_p.max||'?'}% | Cash Advance: ${apr_ca.min||'?'}%-${apr_ca.max||'?'}%`]);
+      if (apr_bt && apr_bt.intro_rate !== null && apr_bt.intro_rate !== undefined) {
+        prodRows.push([`  Balance Transfer`, `${apr_bt.intro_rate}% intro for ${apr_bt.intro_period_months||'?'} months, then ${(apr_bt.post_intro||{}).min||'?'}%-${(apr_bt.post_intro||{}).max||'?'}%`]);
+      }
+    });
+    terms += sec('Card Products & APR', prodRows);
+  }
+
+  // Interest
+  const rates = ir.interest?.daily_periodic_rates || [];
+  terms += sec('Interest Calculation (Section 6)', [
+    ['Method', (ir.interest?.method || '').replace(/_/g, ' ')],
+    ['Rate Tiers', rates.map(r => `${r.apr}% APR (periodic: ${r.daily_rate})`).join(' | ') || 'N/A'],
+    ['Minimum Interest', ir.interest?.minimum_interest || '$0'],
+  ]);
+
+  // Grace Period
+  const gp = ir.grace_period || {};
+  terms += sec('Grace Period (Section 6)', [
+    ['Purchases', `${gp.purchases_days || '?'} days`],
+    ['Condition', (gp.condition || '').replace(/_/g, ' ')],
+    ['Cash Advances', gp.cash_advances || 'none'],
+    ['Balance Transfers', gp.balance_transfers || 'none'],
+  ]);
+
+  // Minimum Payment
+  const mp = ir.minimum_payment || {};
+  terms += sec('Minimum Payment (Section 5)', [
+    ['Formula', `${mp.percent_of_balance || '?'}% of balance or $${mp.floor_amount || '?'}, whichever is greater`],
+    ['Pay in Full Threshold', `$${mp.pay_in_full_threshold || '?'}`],
+  ]);
+
+  // Fees
+  const fees = ir.fees || {};
+  let feeRows = [['Annual Fee', `$${fees.annual || '0'}`]];
+  if (fees.late_payment) feeRows.push(['Late Payment', `$${fval(fees, 'late_payment')}`]);
+  if (fees.returned_payment) feeRows.push(['Returned Payment', `$${fval(fees, 'returned_payment')}${fees.returned_payment?.cap ? ' (capped at ' + fees.returned_payment.cap.replace(/_/g,' ') + ')' : ''}`]);
+  if (fees.over_limit) feeRows.push(['Over Credit Limit', `$${fval(fees, 'over_limit')}${fees.over_limit?.recurring ? ' (recurring monthly)' : ''}`]);
+  if (fees.card_replacement) feeRows.push(['Card Replacement', `$${fval(fees, 'card_replacement')}`]);
+  if (fees.document_copy) feeRows.push(['Document Copy', `$${fval(fees, 'document_copy')}`]);
+  feeRows.push(['Foreign Transaction', `${fees.foreign_transaction_pct || '?'}%`]);
+  if (fees.convenience_check_stop_payment) feeRows.push(['Check Stop Payment', `$${fees.convenience_check_stop_payment}`]);
+  if (fees.convenience_check_nsf) feeRows.push(['Check NSF', `$${fees.convenience_check_nsf}`]);
+  terms += sec('Fees (Section 7)', feeRows);
+
+  // Payment Application
+  const pa = ir.payment_application || {};
+  const waterfall = (pa.minimum_payment_order || []).map((s,i) => `${i+1}. ${s.replace(/_/g,' ')}`).join(', ');
+  terms += sec('Payment Application (Section 10)', [
+    ['Minimum Payment Order', waterfall || 'N/A'],
+    ['Excess Payment', (pa.excess_payment_order || 'highest rate first').replace(/_/g, ' ')],
+  ]);
+
+  // Default
+  const dt = ir.default_triggers || [];
+  const dc = ir.default_consequences || {};
+  terms += sec('Default & Acceleration (Sections 11-12)', [
+    ...dt.map(d => [d.code, (d.condition || '').replace(/_/g, ' ')]),
+    ['Acceleration', dc.acceleration ? 'Yes — full balance due immediately' : 'No'],
+    ['Notice Required', dc.notice_required ? 'Yes' : 'No (waived by cardholder)'],
+    ['Collection Costs', dc.collection_costs || 'N/A'],
+  ]);
+
+  // Unauthorized Use
+  const liab = ir.liability || {};
+  terms += sec('Unauthorized Use (Section 9)', [
+    ['Liability Cap', liab.unauthorized_use_cap ? `$${liab.unauthorized_use_cap}` : 'N/A'],
+    ['VISA Zero-Liability', liab.visa_zero_liability ? 'Yes' : 'No'],
+    ['Exceptions', (liab.zero_liability_exceptions || []).map(e => e.replace(/_/g,' ')).join('; ') || 'N/A'],
+  ]);
+
+  // Disputes
+  const disp = ir.disputes || {};
+  const be = disp.billing_error || {};
+  const pd = disp.purchase_dispute || {};
+  terms += sec('Dispute Rights', [
+    ['Billing Error Window', `${be.filing_window_days || '?'} days`],
+    ['Filing Method', be.filing_method || 'written'],
+    ['CU Ack Deadline', `${be.ack_deadline_days || '?'} days`],
+    ['CU Resolution Deadline', `${be.resolution_deadline_days || '?'} days`],
+    ['CU Failure Penalty', `$${be.cu_failure_penalty || '?'}`],
+    ['Purchase Dispute Geo Limit', `${pd.geographic_limit_same_state_or_miles || '?'} miles`],
+    ['Purchase Dispute Min Amount', `$${pd.minimum_purchase_amount || '?'}`],
+  ]);
+
+  // Termination
+  const term = ir.termination || {};
+  terms += sec('Termination (Section 18)', [
+    ['CU Can Terminate', term.cu_can_terminate ? 'Yes' : 'No'],
+    ['Cardholder Method', (term.cardholder_method || '').replace(/_/g, ' ')],
+    ['Surviving Obligations', (term.surviving_obligations || []).map(s => s.replace(/_/g,' ')).join(', ') || 'N/A'],
+  ]);
+
+  document.getElementById('contract-tab-ir').innerHTML = terms;
+
+  // Load English decompilation
+  try {
+    const eRes = await fetch(`/api/contracts/${id}/english`);
+    const eData = await eRes.json();
+    document.getElementById('contract-tab-english').textContent = eData.english || '';
+  } catch(e) {}
+
+  // Load past analyses
+  const aRes = await fetch(`/api/contracts/${id}/analyses`);
+  const analyses = await aRes.json();
+  const aEl = document.getElementById('past-analyses');
+  if (analyses.length) {
+    aEl.innerHTML = '<div class="card"><h3>Previous Analyses</h3>' +
+      analyses.map(a => `
+        <div class="meta-row" style="cursor:pointer;" onclick="loadAnalysis('${id}', '${a.analysis_id}')">
+          <span class="label">${a.cardholder || 'Analysis'} (${a.num_cycles} cycles)</span>
+          <span class="value btn btn-sm btn-outline">View</span>
+        </div>
+      `).join('') + '</div>';
+  } else {
+    aEl.innerHTML = '';
+  }
+
+  showView('contract');
+  showContractTab('ir');
+}
+
+function showContractTab(tab) {
+  document.getElementById('contract-tab-ir').classList.toggle('hidden', tab !== 'ir');
+  document.getElementById('contract-tab-english').classList.toggle('hidden', tab !== 'english');
+  document.getElementById('btn-tab-ir').style.fontWeight = tab === 'ir' ? '700' : '400';
+  document.getElementById('btn-tab-english').style.fontWeight = tab === 'english' ? '700' : '400';
+}
+
+async function parseContract() {
+  const file = document.getElementById('contract-file').files[0];
+  if (!file) return alert('Select a file first');
+
+  document.getElementById('parse-status').innerHTML = '<span class="spinner"></span> Parsing via LLM...';
+
+  const form = new FormData();
+  form.append('file', file);
+
+  try {
+    const res = await fetch('/api/contracts', { method: 'POST', body: form });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    document.getElementById('parse-status').textContent = 'Done!';
+    showContract(data.id);
+  } catch (e) {
+    document.getElementById('parse-status').textContent = 'Error: ' + e.message;
+  }
+}
+
+async function loadIR() {
+  const file = document.getElementById('ir-file').files[0];
+  if (!file) return alert('Select a file first');
+
+  const form = new FormData();
+  form.append('file', file);
+
+  try {
+    const res = await fetch('/api/contracts/from-ir', { method: 'POST', body: form });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    showContract(data.id);
+  } catch (e) {
+    document.getElementById('ir-status').textContent = 'Error: ' + e.message;
+  }
+}
+
+async function deleteContract() {
+  if (!confirm('Delete this contract instance?')) return;
+  await fetch(`/api/contracts/${currentInstanceId}`, { method: 'DELETE' });
+  showView('home');
+}
+
+// ===================================================================
+// Analysis
+// ===================================================================
+async function runAnalysis() {
+  const file = document.getElementById('stmt-file').files[0];
+  if (!file) return alert('Select a statement file first');
+
+  document.getElementById('analysis-status').innerHTML = '<span class="spinner"></span> Analyzing...';
+
+  const form = new FormData();
+  form.append('file', file);
+
+  try {
+    const res = await fetch(`/api/contracts/${currentInstanceId}/analyze`, { method: 'POST', body: form });
+    if (!res.ok) throw new Error(await res.text());
+    currentAnalysis = await res.json();
+    document.getElementById('analysis-status').textContent = '';
+    renderAnalysis();
+  } catch (e) {
+    document.getElementById('analysis-status').textContent = 'Error: ' + e.message;
+  }
+}
+
+async function loadAnalysis(instanceId, analysisId) {
+  currentInstanceId = instanceId;
+  const res = await fetch(`/api/contracts/${instanceId}/analyses/${analysisId}`);
+  currentAnalysis = await res.json();
+  renderAnalysis();
+}
+
+function renderAnalysis() {
+  const a = currentAnalysis;
+
+  document.getElementById('analysis-title').textContent =
+    `${a.cardholder} | ${a.account} | ${a.num_cycles} cycles`;
+
+  // Summary info
+  document.getElementById('analysis-summary').innerHTML = `
+    <div style="display:flex;gap:24px;font-size:13px;margin-top:8px;">
+      <span>Credit Limit: $${a.credit_limit}</span>
+      <span>Purchase APR: ${a.purchase_apr}%</span>
+      ${!a.single_rate ? `<span>Cash Advance APR: ${a.cash_advance_apr}%</span>` : ''}
+    </div>
+  `;
+
+  // Cycle navigator
+  const nav = a.cycles.map((c, i) => {
+    const month = new Date(c.cycle_start + 'T00:00:00').toLocaleDateString('en-US', { month: 'short' });
+    const hasFee = parseFloat(c.summary.fees) > 0;
+    return `<button class="cycle-btn ${i === 0 ? 'active' : ''} ${hasFee ? 'has-fee' : ''}"
+              onclick="showCycle(${i})">${i + 1}. ${month}${hasFee ? ' !' : ''}</button>`;
+  }).join('');
+  document.getElementById('cycle-nav-bar').innerHTML = `<div class="cycle-nav">${nav}</div>`;
+
+  // Summary table
+  let table = `<table>
+    <tr><th>Cycle</th><th>Month</th><th class="amt">Balance</th><th class="amt">Interest</th>
+        <th class="amt">Fees</th><th class="amt">Payments</th><th>Grace</th></tr>`;
+  let totalInt = 0, totalFees = 0;
+  a.cycles.forEach(c => {
+    const m = new Date(c.cycle_start + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    const g = c.grace_explanation?.eligible ? 'YES' : 'NO';
+    const gClass = c.grace_explanation?.eligible ? 'neg' : 'fee-row';
+    totalInt += parseFloat(c.summary.interest);
+    totalFees += parseFloat(c.summary.fees);
+    table += `<tr>
+      <td>${c.cycle_number}</td><td>${m}</td>
+      <td class="amt">$${c.summary.new_balance}</td>
+      <td class="amt">$${c.summary.interest}</td>
+      <td class="amt ${parseFloat(c.summary.fees) > 0 ? 'fee-row' : ''}">$${c.summary.fees}</td>
+      <td class="amt neg">$${c.summary.payments}</td>
+      <td class="${gClass}">${g}</td>
+    </tr>`;
+  });
+  table += `<tr class="total-row"><td colspan="3">Total</td>
+    <td class="amt">$${totalInt.toFixed(2)}</td>
+    <td class="amt">$${totalFees.toFixed(2)}</td>
+    <td colspan="2"></td></tr></table>`;
+  document.getElementById('summary-table').innerHTML = `<div class="card">${table}</div>`;
+
+  showCycle(0);
+  showView('analysis');
+}
+
+function showCycle(idx) {
+  currentCycle = idx;
+  const c = currentAnalysis.cycles[idx];
+
+  // Update nav buttons
+  document.querySelectorAll('.cycle-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+
+  const s = c.summary;
+  const startDate = new Date(c.cycle_start + 'T00:00:00');
+  const month = startDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  let html = `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h2>Cycle ${c.cycle_number}: ${month}</h2>
+      <div>
+        ${idx > 0 ? `<button class="btn btn-sm btn-outline" onclick="showCycle(${idx-1})">&larr; Prev</button>` : ''}
+        ${idx < currentAnalysis.cycles.length - 1 ? `<button class="btn btn-sm" onclick="showCycle(${idx+1})">Next &rarr;</button>` : ''}
+      </div>
+    </div>
+    <div class="dim">${c.cycle_start} to ${c.cycle_end} (${c.days_in_cycle} days)</div>
+
+    <div class="summary-grid" style="margin-top:12px;">
+      <div class="summary-cell"><div class="label">Previous</div><div class="value">$${s.previous_balance}</div></div>
+      <div class="summary-cell"><div class="label">Purchases</div><div class="value">$${s.purchases}</div></div>
+      <div class="summary-cell"><div class="label">Cash Adv</div><div class="value">$${s.cash_advances}</div></div>
+      <div class="summary-cell"><div class="label">Fees</div><div class="value">$${s.fees}</div></div>
+      <div class="summary-cell"><div class="label">Interest</div><div class="value">$${s.interest}</div></div>
+      <div class="summary-cell"><div class="label">Payments</div><div class="value neg">-$${s.payments}</div></div>
+      <div class="summary-cell highlight"><div class="label">New Balance</div><div class="value">$${s.new_balance}</div></div>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:#666;">
+      Min Payment: $${s.minimum_payment} | Due: ${s.due_date || 'N/A'}
+    </div>
+  `;
+
+  // Transactions
+  if (c.transactions.length) {
+    html += `<h3>Transactions</h3><table>
+      <tr><th>Date</th><th>Description</th><th>Category</th><th class="amt">Amount</th></tr>`;
+    c.transactions.forEach(tx => {
+      const isPay = tx.category === 'Payment';
+      html += `<tr class="${isPay ? 'neg' : tx.category === 'Fee' ? 'fee-row' : ''}">
+        <td>${tx.date}</td><td>${tx.description}</td><td>${tx.category}</td>
+        <td class="amt">${isPay ? '-' : ''}$${tx.amount}</td></tr>`;
+    });
+    html += '</table>';
+  }
+  html += '</div>';
+
+  // 2B: Interest
+  html += renderInterest(c);
+  // 2C: Grace
+  html += renderGrace(c);
+  // 2D: Fees
+  html += renderFees(c);
+  // 2E: Payments
+  html += renderPayments(c);
+
+  document.getElementById('cycle-detail').innerHTML = html;
+}
+
+// ===================================================================
+// Section renderers
+// ===================================================================
+function evidence(title, text) {
+  return `<div style="margin-top:10px;padding:8px 12px;background:#f0f4ff;border-left:3px solid #003366;font-size:11px;">
+    <strong style="color:#003366;">Contract Evidence — ${title}</strong><br>
+    <span style="color:#444;">${text}</span></div>`;
+}
+
+function renderInterest(c) {
+  const ie = c.interest_explanation;
+  if (!ie) return '';
+  const total = ie.total;
+  const ev = currentAnalysis.contract_evidence?.interest || {};
+  const rt = ie.rate_type || currentAnalysis.rate_type || 'daily';
+
+  let body = '';
+  if (ie.grace_active && parseFloat(total) === 0) {
+    body = `<p>Grace period is in effect. No interest charged on purchases this cycle.</p>`;
+    if (ie.adb_entries.length) {
+      body += `<p class="dim">For reference, the ADB if grace were not in effect would be $${ie.purchase_adb}.</p>`;
+    }
+    body += evidence(ev.clause || 'Section 6',
+      `${ev.rule || ''} Grace period applies — ADB not used for interest this cycle.`);
+  } else {
+    const carried = ie.carried_balance;
+    if (parseFloat(carried) > 0) {
+      body += `<p>The cycle opens with a carried balance of <strong>$${carried}</strong> from the previous cycle. Interest accrues on the total daily balance — not just this month's new charges.</p>`;
+    }
+
+    if (ie.adb_entries.length) {
+      body += `<div class="adb-table"><table>
+        <tr><th>Date Range</th><th class="amt">Days</th><th class="amt">Daily Balance</th><th class="amt">Bal x Days</th><th>Activity</th></tr>`;
+      let totalDays = 0, totalSub = 0;
+      ie.adb_entries.forEach(e => {
+        body += `<tr><td>${e.start}-${e.end}</td><td class="amt">${e.days}</td>
+          <td class="amt">$${e.balance}</td><td class="amt">$${e.subtotal}</td><td>${e.activity}</td></tr>`;
+        totalDays += e.days;
+        totalSub += parseFloat(e.subtotal);
+      });
+      body += `<tr class="total-row"><td></td><td class="amt">${totalDays}</td><td></td>
+        <td class="amt">$${totalSub.toFixed(2)}</td><td></td></tr></table></div>`;
+
+      const rateLabel = rt === 'monthly' ? 'Monthly Rate' : 'Daily Rate';
+      const formula3 = rt === 'monthly'
+        ? `Interest = $${ie.purchase_adb} &times; ${ie.purchase_rate} = <strong>$${total}</strong>`
+        : `Interest = $${ie.purchase_adb} &times; ${ie.purchase_rate} &times; ${ie.days_in_cycle} = <strong>$${total}</strong>`;
+
+      body += `<div class="formula">
+        <div><span class="step-label">Step 1:</span> Sum(Balance &times; Days) = $${totalSub.toFixed(2)}</div>
+        <div><span class="step-label">Step 2:</span> ADB = $${totalSub.toFixed(2)} &divide; ${totalDays} days = <strong>$${ie.purchase_adb}</strong></div>
+        <div><span class="step-label">Step 3:</span> ${formula3}</div>
+      </div>`;
+    }
+
+    body += evidence(ev.clause || 'Section 6',
+      `Method: ${ev.method || 'average daily balance'}. Rates: ${ev.rates || 'N/A'}. ${ev.rule || ''}`);
+  }
+
+  return `<div class="section-block interest">
+    <div class="section-header">2B. Interest Charged<span class="result">$${total}</span></div>
+    <div class="section-body">${body}</div></div>`;
+}
+
+function renderGrace(c) {
+  const ge = c.grace_explanation;
+  if (!ge) return '';
+  const cls = ge.eligible ? 'grace-yes' : 'grace-no';
+  const status = ge.eligible ? 'YES' : 'NO';
+  const ev = currentAnalysis.contract_evidence?.grace_period || {};
+
+  let body = `<p>${ge.reason}</p>`;
+  body += evidence(ev.clause || 'Section 6', ev.rule || 'Grace period applies if previous balance paid in full by due date.');
+
+  return `<div class="section-block ${cls}">
+    <div class="section-header">2C. Grace Period<span class="result">${status}</span></div>
+    <div class="section-body">${body}</div></div>`;
+}
+
+function renderFees(c) {
+  const fees = c.fee_explanations;
+  const total = fees.reduce((s, f) => s + parseFloat(f.amount), 0);
+  const cls = fees.length ? 'fees' : 'fees no-fees';
+  const evFees = currentAnalysis.contract_evidence?.fees || {};
+
+  let body = '';
+  if (!fees.length) {
+    body = '<p class="dim">No fees assessed this cycle.</p>';
+  } else {
+    fees.forEach(f => {
+      // Find matching evidence from contract
+      let evRule = '';
+      const dl = f.description.toLowerCase();
+      if (dl.includes('late') && evFees.late_payment) {
+        evRule = `Contract authorizes up to $${evFees.late_payment.amount} per ${evFees.late_payment.clause}. "${evFees.late_payment.rule}"`;
+      } else if (dl.includes('returned') && evFees.returned_payment) {
+        evRule = `Contract authorizes up to $${evFees.returned_payment.amount} per ${evFees.returned_payment.clause}. "${evFees.returned_payment.rule}"`;
+      } else if (dl.includes('over') && evFees.over_limit) {
+        evRule = `Contract authorizes $${evFees.over_limit.amount} per ${evFees.over_limit.clause}. "${evFees.over_limit.rule}"`;
+      }
+
+      body += `<div style="margin-bottom:12px;padding:8px;border:1px solid #eee;border-radius:2px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <strong>${f.description}</strong>
+          <span class="fee-row" style="font-size:16px;font-weight:700;">$${f.amount}</span>
+        </div>
+        <div style="margin-top:6px;font-size:12px;color:#555;">${f.justification}</div>
+        <div style="margin-top:4px;font-size:11px;color:#888;">Clause: ${f.clause_ref}</div>
+        ${evRule ? evidence('Fee Authorization', evRule) : ''}
+      </div>`;
+    });
+  }
+
+  return `<div class="section-block ${cls}">
+    <div class="section-header">2D. Fees Charged<span class="result">$${total.toFixed(2)}</span></div>
+    <div class="section-body">${body}</div></div>`;
+}
+
+function renderPayments(c) {
+  const pays = c.payment_explanations;
+  const total = pays.reduce((s, p) => s + parseFloat(p.amount), 0);
+  const cls = pays.length ? 'payments' : 'payments no-payments';
+  const ev = currentAnalysis.contract_evidence?.payment_waterfall || {};
+
+  let body = '';
+  if (!pays.length) {
+    body = '<p class="dim">No payments received this cycle.</p>';
+  } else {
+    pays.forEach(p => {
+      body += `<p><strong>Payment of $${p.amount} received ${p.date}</strong></p>
+        <table><tr><th>Step</th><th class="amt">Amount</th><th>Applied To</th></tr>`;
+      p.steps.forEach(s => {
+        body += `<tr><td>${s.component}</td><td class="amt">$${s.amount}</td><td>${s.applied_to}</td></tr>`;
+      });
+      if (parseFloat(p.excess) > 0) {
+        body += `<tr><td>Excess → highest rate</td><td class="amt">$${p.excess}</td><td>${p.excess_applied_to}</td></tr>`;
+      }
+      body += `<tr class="total-row"><td>Total Applied</td><td class="amt">$${p.amount}</td><td></td></tr></table>`;
+    });
+    body += evidence(ev.clause || 'Section 10',
+      `Waterfall: ${ev.order || 'N/A'}. Excess: ${ev.excess || 'highest rate first'}. "${ev.rule || ''}"`);
+  }
+
+  return `<div class="section-block ${cls}">
+    <div class="section-header">2E. Payments Applied<span class="result">$${total.toFixed(2)}</span></div>
+    <div class="section-body">${body}</div></div>`;
+}
+
+// ===================================================================
+// Init
+// ===================================================================
+loadContracts();
+</script>
+
+</body>
+</html>

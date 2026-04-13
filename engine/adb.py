@@ -64,34 +64,37 @@ class ADBTracker:
         self._current_start = event_date
         self._pending_activity = activity
 
-    def finalize(self, daily_rate: Decimal, days_in_cycle: int) -> dict:
+    def finalize(self, rate: Decimal, days_in_cycle: int,
+                 rate_type: str = "daily") -> dict:
         """Close the cycle and compute ADB + interest.
 
-        Returns:
-            {
-                "entries": list[ADBEntry],
-                "sum_of_balances": Decimal,
-                "days_in_cycle": int,
-                "adb": Decimal,
-                "daily_rate": Decimal,
-                "interest": Decimal,
-            }
+        Args:
+            rate: The periodic rate (daily or monthly depending on rate_type).
+            days_in_cycle: Number of days in the billing cycle.
+            rate_type: "daily" → Interest = ADB × rate × days
+                       "monthly" → Interest = ADB × rate
+
+        Returns dict with entries, sum, adb, rate, interest.
         """
         if not self._finalized:
-            # Close final range through cycle end
             self._close_range(self.cycle_end)
             self._finalized = True
 
         total = sum(e.subtotal for e in self._entries)
         adb = _round(total / Decimal(str(days_in_cycle))) if days_in_cycle > 0 else ZERO
-        interest = _round(adb * daily_rate * Decimal(str(days_in_cycle)))
+
+        if rate_type == "monthly":
+            interest = _round(adb * rate)
+        else:
+            interest = _round(adb * rate * Decimal(str(days_in_cycle)))
 
         return {
             "entries": list(self._entries),
             "sum_of_balances": _round(total),
             "days_in_cycle": days_in_cycle,
             "adb": adb,
-            "daily_rate": daily_rate,
+            "rate": rate,
+            "rate_type": rate_type,
             "interest": interest,
         }
 

@@ -75,7 +75,7 @@ def _render_security(ir: dict) -> str:
 
     return (
         "**SECURITY.** You grant us a consensual security interest in "
-        f"{si.get('scope', 'all individual and joint accounts').replace('_', ' ')} "
+        f"{_safe(si.get('scope'), 'all individual and joint accounts')} "
         "you have with us now and in the future to secure repayment of credit extensions "
         f"made under this Agreement. Exceptions: {exc_text}."
     )
@@ -104,14 +104,16 @@ def _render_extensions_of_credit(ir: dict) -> str:
 
 
 def _render_joint_liability(ir: dict) -> str:
-    joint = ir.get("joint_account", {})
+    joint = ir.get("joint_account") or {}
     if not joint:
         return ""
+
+    liability_type = _safe(joint.get("liability_type"), "jointly and individually")
 
     parts = [
         "2) **Joint Applicant Liability.** If this Agreement is executed by more "
         "than one person, each of you shall be "
-        f"{joint.get('liability_type', 'jointly and individually').replace('_', ' ')} "
+        f"{liability_type} "
         "liable to us for all charges made to the account, including applicable fees."
     ]
     if joint.get("each_is_agent_for_other"):
@@ -122,12 +124,12 @@ def _render_joint_liability(ir: dict) -> str:
     if joint.get("notice_to_one_is_notice_to_all"):
         parts.append("Notice to one of you shall constitute notice to all.")
 
-    withdrawal = joint.get("withdrawal_method", "")
+    withdrawal = joint.get("withdrawal_method")
     if withdrawal:
         parts.append(
             f"Any joint cardholder may remove themselves from responsibility for "
             f"future purchases at any time by notifying us in "
-            f"{withdrawal.replace('_', ' ')}."
+            f"{_safe(withdrawal, 'writing')}."
         )
     if not joint.get("withdrawal_releases_existing_debt", True):
         parts.append(
@@ -243,25 +245,25 @@ def _render_fees(ir: dict) -> str:
 
     fee_items = []
 
-    if "late_payment" in fees:
-        lp = fees["late_payment"]
+    lp = fees.get("late_payment")
+    if lp and isinstance(lp, dict):
         fee_items.append(
             f"* Late Payment Fee. If you are late in making a payment, a late charge "
-            f"of ${lp['amount']} may be added to your account."
+            f"of ${lp.get('amount', '?')} may be added to your account."
         )
 
-    if "returned_payment" in fees:
-        rp = fees["returned_payment"]
+    rp = fees.get("returned_payment")
+    if rp and isinstance(rp, dict):
         fee_items.append(
             f"* Returned Payment Fee. If a check, share draft or other order used to "
             f"make a payment on your account is returned unpaid, you may be charged a "
-            f"fee of ${rp['amount']} for each item returned. In no event will the "
+            f"fee of ${rp.get('amount', '?')} for each item returned. In no event will the "
             f"Returned Payment Fee exceed the minimum payment amount for the applicable "
             f"statement period."
         )
 
-    if "over_limit" in fees:
-        ol = fees["over_limit"]
+    ol = fees.get("over_limit")
+    if ol and isinstance(ol, dict):
         recurring = ""
         if ol.get("recurring"):
             recurring = (
@@ -270,21 +272,21 @@ def _render_fees(ir: dict) -> str:
                 "is below your credit limit."
             )
         fee_items.append(
-            f"* Over Credit Limit Fee. You may be charged a fee of ${ol['amount']} "
+            f"* Over Credit Limit Fee. You may be charged a fee of ${ol.get('amount', '?')} "
             f"on a statement date if your New Balance, less any fees imposed during "
             f"the cycle, is over your credit limit.{recurring}"
         )
 
-    if "card_replacement" in fees:
-        cr = fees["card_replacement"]
-        cr_amount = cr["amount"] if isinstance(cr, dict) else cr
+    cr = fees.get("card_replacement")
+    if cr:
+        cr_amount = cr.get("amount", cr) if isinstance(cr, dict) else cr
         fee_items.append(
             f"* Card Replacement Fee. You may be charged ${cr_amount} "
             f"for each replacement Card that is issued to you for any reason."
         )
 
-    if "document_copy" in fees:
-        dc = fees["document_copy"]
+    dc = fees.get("document_copy")
+    if dc and isinstance(dc, dict):
         waiver = ""
         if dc.get("waived_on_cu_billing_error"):
             waiver = " (except when the request is made in conjunction with a billing error made by the Credit Union)"
@@ -313,27 +315,27 @@ def _render_fees(ir: dict) -> str:
 
 
 def _render_payment_application(ir: dict) -> str:
-    pa = ir.get("payment_application", {})
-    min_order = pa.get("minimum_payment_order", [])
-    excess = pa.get("excess_payment_order", "highest_rate_first")
+    pa = ir.get("payment_application") or {}
+    min_order = pa.get("minimum_payment_order") or []
+    excess = pa.get("excess_payment_order") or "highest rate first"
 
     order_text = ", then to ".join(
-        o.replace("_", " ") for o in min_order
+        _safe(o) for o in min_order if o
     )
 
     return (
         f"10) **Crediting of Payments.** All required minimum payments on your "
         f"account will be applied first to {order_text}. "
         f"Payments made in excess of the required minimum payment will be applied "
-        f"first to the balances with the {excess.replace('_', ' ')}, if applicable."
+        f"first to the balances with the {_safe(excess, 'highest rate first')}, if applicable."
     )
 
 
 def _render_default(ir: dict) -> str:
-    triggers = ir.get("default_triggers", [])
+    triggers = ir.get("default_triggers") or []
     parts = ["11) **Default. You will be in default:**"]
     for i, t in enumerate(triggers, 1):
-        condition = t["condition"].replace("_", " ")
+        condition = _safe(t.get("condition"), "unspecified")
         parts.append(f"({i}) if {condition};")
     return " ".join(parts)
 
@@ -442,22 +444,22 @@ def _render_disputes(ir: dict) -> str:
 
 
 def _render_termination(ir: dict) -> str:
-    term = ir.get("termination", {})
+    term = ir.get("termination") or {}
     parts = ["18) **Termination or Changes.**"]
     if term.get("cu_can_terminate"):
         parts.append(
             "The Credit Union may terminate this Agreement at any time subject "
             "to such notice as may be required by applicable law."
         )
-    method = term.get("cardholder_method", "")
+    method = term.get("cardholder_method")
     if method:
         parts.append(
-            f"You may terminate this Agreement, by {method.replace('_', ' ')}, "
+            f"You may terminate this Agreement, by {_safe(method, 'written notice')}, "
             f"as to future advances at any time."
         )
-    surviving = term.get("surviving_obligations", [])
+    surviving = term.get("surviving_obligations") or []
     if surviving:
-        items = ", ".join(s.replace("_", " ") for s in surviving)
+        items = ", ".join(_safe(s) for s in surviving if s)
         parts.append(
             f"Termination by either party shall not affect your obligation to "
             f"repay {items}."
@@ -512,8 +514,8 @@ def _render_disclosure_table(ir: dict) -> str:
     ]
 
     for p in products:
-        apr_p = p.get("apr_purchases", {})
-        apr_ca = p.get("apr_cash_advances", {})
+        apr_p = p.get("apr_purchases") or {}
+        apr_ca = p.get("apr_cash_advances") or {}
         apr_bt = p.get("apr_balance_transfers") or {}
 
         lines.append(
@@ -535,12 +537,12 @@ def _render_disclosure_table(ir: dict) -> str:
             )
 
     lines.append(f"| **Annual Fee** | ${fees.get('annual', '0.00')} |")
-    lines.append(
-        f"| **Late Payment Fee** | Up to ${fees.get('late_payment', {}).get('amount', '?')} |"
-    )
-    lines.append(
-        f"| **Returned Payment Fee** | Up to ${fees.get('returned_payment', {}).get('amount', '?')} |"
-    )
+    lp_fee = fees.get('late_payment')
+    lp_amt = lp_fee.get('amount', '?') if isinstance(lp_fee, dict) else (lp_fee or '?')
+    lines.append(f"| **Late Payment Fee** | Up to ${lp_amt} |")
+    rp_fee = fees.get('returned_payment')
+    rp_amt = rp_fee.get('amount', '?') if isinstance(rp_fee, dict) else (rp_fee or '?')
+    lines.append(f"| **Returned Payment Fee** | Up to ${rp_amt} |")
     lines.append(
         f"| **Foreign Transaction Fee** | Up to {fees.get('foreign_transaction_pct', '?')}% |"
     )
@@ -556,6 +558,13 @@ def _fmt_pct(value: str) -> str:
     """Format a decimal rate as a percentage string (e.g. '0.0002986' → '0.02986')."""
     d = Decimal(value) * 100
     return str(d)
+
+
+def _safe(val, default: str = "") -> str:
+    """Safely convert a value to string, handling None."""
+    if val is None:
+        return default
+    return str(val).replace("_", " ")
 
 
 def _format_exception(exc: str) -> str:

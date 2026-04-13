@@ -277,10 +277,17 @@ def _print_2b(r, params, W):
     if ie.total_interest > ZERO:
         rate = ie.purchase_rate if ie.purchase_interest > ZERO else ie.cash_advance_rate
         rate_pct = rate * 100
-        print(f"  Step 3: Apply the daily periodic rate")
-        print(f"  Interest = ADB x Daily Rate x Days")
-        print(f"           = ${adb} x {rate_pct}% x {ie.days_in_cycle}")
-        print(f"           = ${ie.total_interest}")
+        rt = getattr(ie, 'rate_type', 'daily')
+        if rt == "monthly":
+            print(f"  Step 3: Apply the monthly periodic rate")
+            print(f"  Interest = ADB x Monthly Rate")
+            print(f"           = ${adb} x {rate_pct}%")
+            print(f"           = ${ie.total_interest}")
+        else:
+            print(f"  Step 3: Apply the daily periodic rate")
+            print(f"  Interest = ADB x Daily Rate x Days")
+            print(f"           = ${adb} x {rate_pct}% x {ie.days_in_cycle}")
+            print(f"           = ${ie.total_interest}")
     else:
         print(f"  Interest = $0.00")
 

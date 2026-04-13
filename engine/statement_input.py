@@ -62,15 +62,19 @@ class AccountParams:
     returned_payment_fee: Decimal = ZERO
     over_credit_limit_fee: Decimal = ZERO
     foreign_transaction_pct: Decimal = ZERO
+    foreign_transaction_single_pct: Decimal = ZERO  # single-currency tier (if different)
     cash_advance_fee_pct: Decimal = ZERO
     cash_advance_fee_min: Decimal = ZERO
     interest_method: str = "average_daily_balance_including_current_transactions"
+    # "daily" = ADB × daily_rate × days (WesTex)
+    # "monthly" = ADB × monthly_rate (USFederalCU)
+    rate_type: str = "daily"
     # Whether purchases and cash advances share one ADB or have separate buckets
     single_rate: bool = True
     # Whether grace requires previous cycle to also have had grace (trailing interest)
-    # WesTex: True (paying statement balance doesn't restore grace same cycle)
-    # USFederalCU: False (paying statement balance in full restores grace)
     trailing_interest_grace: bool = True
+    # Track unpaid minimum carryover
+    has_minimum_carryover: bool = False
 
 
 @dataclass
@@ -194,6 +198,25 @@ def _parse_params(html: str) -> AccountParams:
     if m:
         params.cash_advance_fee_pct = Decimal(m.group(1)) / Decimal("100")
         params.cash_advance_fee_min = Decimal(m.group(2))
+
+    # Foreign transaction single-currency tier
+    m = re.search(r'foreign_transaction_single_pct:\s*([\d.]+)', block)
+    if m:
+        params.foreign_transaction_single_pct = Decimal(m.group(1))
+
+    # Detect rate type: if daily rates are given as small decimals (< 0.01), they're daily.
+    # If they're > 0.1, they're monthly periodic rates (e.g., 1.16%).
+    if params.purchase_daily_rate > Decimal("0.01"):
+        # These are monthly rates, not daily (e.g., 1.16% monthly)
+        params.rate_type = "monthly"
+        # Convert the field names: store as monthly_rate but keep the field
+        # The rate is already correct — just flag how to apply it
+    else:
+        params.rate_type = "daily"
+
+    # Minimum carryover: detect from interest_method or keywords
+    if "unpaid" in block.lower() and "prior statement" in block.lower():
+        params.has_minimum_carryover = True
 
     # Trailing interest: if single-rate agreement, use trailing interest rule
     # (WesTex style). Dual-rate agreements (USFederalCU) use standard rule.

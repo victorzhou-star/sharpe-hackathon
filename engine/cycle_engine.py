@@ -72,6 +72,7 @@ class InterestExplanation:
     days_in_cycle: int = 0
     adb_entries: list = field(default_factory=list)  # ADBEntry list
     grace_note: str = ""
+    rate_type: str = "daily"  # "daily" or "monthly"
 
 
 @dataclass
@@ -343,40 +344,43 @@ def _compute_interest(
             tracker.post(tx.post_date, tx.amount, f"+{tx.description} ${tx.amount}")
 
     # Compute interest
+    rt = params.rate_type  # "daily" or "monthly"
+
     if params.single_rate:
         # Single ADB for everything (WesTex style)
-        daily_rate = params.purchase_daily_rate
+        rate = params.purchase_daily_rate
         if grace_eligible:
-            # Grace active — no interest on purchases
-            adb_result = tracker.finalize(daily_rate, cycle.days_in_cycle)
+            adb_result = tracker.finalize(rate, cycle.days_in_cycle, rate_type=rt)
             exp = InterestExplanation(
                 purchase_adb=adb_result["adb"],
-                purchase_rate=daily_rate,
+                purchase_rate=rate,
                 purchase_apr=params.purchase_apr,
                 purchase_interest=ZERO,
                 cash_advance_adb=ZERO,
-                cash_advance_rate=daily_rate,
+                cash_advance_rate=rate,
                 cash_advance_apr=params.cash_advance_apr,
                 cash_advance_interest=ZERO,
                 total_interest=ZERO,
                 days_in_cycle=cycle.days_in_cycle,
                 adb_entries=adb_result["entries"],
                 grace_note="(not applied - grace period in effect)",
+                rate_type=rt,
             )
         else:
-            adb_result = tracker.finalize(daily_rate, cycle.days_in_cycle)
+            adb_result = tracker.finalize(rate, cycle.days_in_cycle, rate_type=rt)
             exp = InterestExplanation(
                 purchase_adb=adb_result["adb"],
-                purchase_rate=daily_rate,
+                purchase_rate=rate,
                 purchase_apr=params.purchase_apr,
                 purchase_interest=adb_result["interest"],
                 cash_advance_adb=ZERO,
-                cash_advance_rate=daily_rate,
+                cash_advance_rate=rate,
                 cash_advance_apr=params.cash_advance_apr,
                 cash_advance_interest=ZERO,
                 total_interest=adb_result["interest"],
                 days_in_cycle=cycle.days_in_cycle,
                 adb_entries=adb_result["entries"],
+                rate_type=rt,
             )
     else:
         # Dual ADB (USFederalCU style) — separate rates for purchases and cash advances
@@ -416,16 +420,14 @@ def _compute_interest(
         p_rate = params.purchase_daily_rate
         ca_rate = params.cash_advance_daily_rate
 
-        p_result = purchase_tracker.finalize(p_rate, cycle.days_in_cycle)
-        ca_result = ca_tracker.finalize(ca_rate, cycle.days_in_cycle)
+        p_result = purchase_tracker.finalize(p_rate, cycle.days_in_cycle, rate_type=rt)
+        ca_result = ca_tracker.finalize(ca_rate, cycle.days_in_cycle, rate_type=rt)
 
         p_interest = ZERO if grace_eligible else p_result["interest"]
         ca_interest = ca_result["interest"]  # cash advances NEVER have grace
 
-        # Combine ADB entries for display (interleave by date)
-        all_entries = p_result["entries"] + ca_result["entries"]
-        # Use the combined tracker entries for the display (since it shows total balance)
-        combined_result = tracker.finalize(p_rate, cycle.days_in_cycle)
+        # Use the combined tracker entries for the display (shows total balance)
+        combined_result = tracker.finalize(p_rate, cycle.days_in_cycle, rate_type=rt)
 
         exp = InterestExplanation(
             purchase_adb=p_result["adb"],
@@ -440,6 +442,7 @@ def _compute_interest(
             days_in_cycle=cycle.days_in_cycle,
             adb_entries=combined_result["entries"],
             grace_note="(not applied - grace period in effect for purchases)" if grace_eligible else "",
+            rate_type=rt,
         )
 
     return exp, tracker
@@ -517,6 +520,46 @@ def _justify_fees(
                 clause_ref=tx.clause_ref or "Agreement - Cash Advance Fee",
                 justification=f"Cash advance fee assessed: greater of "
                               f"{params.cash_advance_fee_pct * 100}% or ${params.cash_advance_fee_min}.",
+            ))
+
+        elif "currency" in desc_lower or "conversion" in desc_lower:
+            # Foreign currency conversion fee (multi/single currency tier)
+            pct = params.foreign_transaction_pct
+            if params.foreign_transaction_single_pct > ZERO and "single" in desc_lower:
+                pct = params.foreign_transaction_single_pct
+            explanations.append(FeeExplanation(
+                fee_date=tx.post_date,
+                description=tx.description,
+                amount=tx.amount,
+                clause_ref=tx.clause_ref or "Agreement - Foreign Transaction Fee",
+                justification=f"Currency conversion fee of {pct * 100}% applied to international transaction.",
+            ))
+
+        elif "stop payment" in desc_lower:
+            explanations.append(FeeExplanation(
+                fee_date=tx.post_date,
+                description=tx.description,
+                amount=tx.amount,
+                clause_ref=tx.clause_ref or "Agreement - Stop Payment Fee",
+                justification=f"Stop payment fee of ${tx.amount} assessed on convenience check.",
+            ))
+
+        elif "card replacement" in desc_lower or "quick card" in desc_lower:
+            explanations.append(FeeExplanation(
+                fee_date=tx.post_date,
+                description=tx.description,
+                amount=tx.amount,
+                clause_ref=tx.clause_ref or "Agreement - Card Fee",
+                justification=f"Card issuance/replacement fee of ${tx.amount} assessed per agreement.",
+            ))
+
+        elif "copy" in desc_lower or "document" in desc_lower or "slip" in desc_lower:
+            explanations.append(FeeExplanation(
+                fee_date=tx.post_date,
+                description=tx.description,
+                amount=tx.amount,
+                clause_ref=tx.clause_ref or "Agreement - Document Copy Fee",
+                justification=f"Document copy fee of ${tx.amount} assessed per agreement.",
             ))
 
         else:

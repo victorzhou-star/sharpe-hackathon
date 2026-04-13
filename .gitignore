@@ -6,6 +6,8 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 
+web/data/
+
 # Generated output (reproducible via CLI)
 # These are created by analyze/run commands — don't commit them
 *_english.md
